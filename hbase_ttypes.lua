@@ -6,24 +6,38 @@
 --
 
 
-require 'Thrift'
-require 'hbase_constants'
+ -- require 'hbase_constants'
 
-TDeleteType = {
+local Thrift =require 'Thrift' 
+ 
+local ttype = Thrift.ttype 
+local terror = Thrift.terror 
+local ttable_size = Thrift.ttable_size 
+local TType = Thrift.TType 
+local TMessageType = Thrift.TMessageType 
+local __TObject = Thrift. __TObject 
+local thrift_print_r = Thrift.thrift_print_r 
+local TException = Thrift.TException 
+local TApplicationException = Thrift.TApplicationException 
+local __TClient = Thrift.__TClient 
+local __TProcessor= Thrift.__TProcessor
+
+local TDeleteType = {
   DELETE_COLUMN = 0,
   DELETE_COLUMNS = 1
 }
 
-TDurability = {
+local TDurability = {
   SKIP_WAL = 1,
   ASYNC_WAL = 2,
   SYNC_WAL = 3,
   FSYNC_WAL = 4
 }
 
-TTimeRange = __TObject:new{
-  minStamp,
-  maxStamp
+local TTimeRange = __TObject:new{
+  minStamp = nil,
+
+  maxStamp = nil
 }
 
 function TTimeRange:read(iprot)
@@ -68,10 +82,10 @@ function TTimeRange:write(oprot)
   oprot:writeStructEnd()
 end
 
-TColumn = __TObject:new{
-  family,
-  qualifier,
-  timestamp
+local TColumn = __TObject:new{
+  family = nil,
+  qualifier = nil,
+  timestamp = nil
 }
 
 function TColumn:read(iprot)
@@ -127,12 +141,12 @@ function TColumn:write(oprot)
   oprot:writeStructEnd()
 end
 
-TColumnValue = __TObject:new{
-  family,
-  qualifier,
-  value,
-  timestamp,
-  tags
+local TColumnValue = __TObject:new{
+  family = nil,
+  qualifier= nil,
+  value = nil,
+  timestamp = nil,
+  tags = nil
 }
 
 function TColumnValue:read(iprot)
@@ -210,10 +224,10 @@ function TColumnValue:write(oprot)
   oprot:writeStructEnd()
 end
 
-TColumnIncrement = __TObject:new{
-  family,
-  qualifier,
-  amount
+local TColumnIncrement = __TObject:new{
+  family = nil,
+  qualifier = nil ,
+  amount = nil
 }
 
 function TColumnIncrement:read(iprot)
@@ -269,9 +283,9 @@ function TColumnIncrement:write(oprot)
   oprot:writeStructEnd()
 end
 
-TResult = __TObject:new{
-  row,
-  columnValues
+local TResult = __TObject:new{
+  row = nil,
+  columnValues = nil
 }
 
 function TResult:read(iprot)
@@ -327,8 +341,8 @@ function TResult:write(oprot)
   oprot:writeStructEnd()
 end
 
-TAuthorization = __TObject:new{
-  labels
+local TAuthorization = __TObject:new{
+  labels = nil
 }
 
 function TAuthorization:read(iprot)
@@ -372,8 +386,8 @@ function TAuthorization:write(oprot)
   oprot:writeStructEnd()
 end
 
-TCellVisibility = __TObject:new{
-  expression
+local TCellVisibility = __TObject:new{
+  expression = nil
 }
 
 function TCellVisibility:read(iprot)
@@ -407,15 +421,15 @@ function TCellVisibility:write(oprot)
   oprot:writeStructEnd()
 end
 
-TGet = __TObject:new{
-  row,
-  columns,
-  timestamp,
-  timeRange,
-  maxVersions,
-  filterString,
-  attributes,
-  authorizations
+local TGet = __TObject:new{
+  row = nil,
+  columns = nil,
+  timestamp = nil ,
+  timeRange = nil,
+  maxVersions = nil,
+  filterString = nil,
+  attributes = nil,
+  authorizations = nil
 }
 
 function TGet:read(iprot)
@@ -551,13 +565,13 @@ function TGet:write(oprot)
   oprot:writeStructEnd()
 end
 
-TPut = __TObject:new{
-  row,
-  columnValues,
-  timestamp,
-  attributes,
-  durability,
-  cellVisibility
+local TPut = __TObject:new{
+  row = nil,
+  columnValues = nil,
+  timestamp = nil ,
+  attributes = nil ,
+  durability = nil,
+  cellVisibility = nil
 }
 
 function TPut:read(iprot)
@@ -670,13 +684,13 @@ function TPut:write(oprot)
   oprot:writeStructEnd()
 end
 
-TDelete = __TObject:new{
-  row,
-  columns,
-  timestamp,
-  deleteType,
-  attributes,
-  durability
+local TDelete = __TObject:new{
+  row = nil,
+  columns = nil,
+  timestamp= nil ,
+  deleteType= nil,
+  attributes = nil,
+  durability =nil
 }
 
 function TDelete:read(iprot)
@@ -788,12 +802,12 @@ function TDelete:write(oprot)
   oprot:writeStructEnd()
 end
 
-TIncrement = __TObject:new{
-  row,
-  columns,
-  attributes,
-  durability,
-  cellVisibility
+local TIncrement = __TObject:new{
+  row = nil,
+  columns = nil ,
+  attributes = nil,
+  durability = nil,
+  cellVisibility = nil
 }
 
 function TIncrement:read(iprot)
@@ -895,12 +909,12 @@ function TIncrement:write(oprot)
   oprot:writeStructEnd()
 end
 
-TAppend = __TObject:new{
-  row,
-  columns,
-  attributes,
-  durability,
-  cellVisibility
+local TAppend = __TObject:new{
+  row = nil,
+  columns = nil ,
+  attributes = nil ,
+  durability = nil,
+  cellVisibility = nil
 }
 
 function TAppend:read(iprot)
@@ -1002,19 +1016,19 @@ function TAppend:write(oprot)
   oprot:writeStructEnd()
 end
 
-TScan = __TObject:new{
-  startRow,
-  stopRow,
-  columns,
-  caching,
-  maxVersions,
-  timeRange,
-  filterString,
-  batchSize,
-  attributes,
-  authorizations,
-  reversed,
-  cacheBlocks
+local TScan = __TObject:new{
+  startRow = nil,
+  stopRow = nil,
+  columns = nil,
+  caching = nil,
+  maxVersions= nil,
+  timeRange = nil,
+  filterString = nil,
+  batchSize = nil,
+  attributes = nil,
+  authorizations = nil,
+  reversed = nil,
+  cacheBlocks = nil
 }
 
 function TScan:read(iprot)
@@ -1194,9 +1208,9 @@ function TScan:write(oprot)
   oprot:writeStructEnd()
 end
 
-TMutation = __TObject:new{
-  put,
-  deleteSingle
+local TMutation = __TObject:new{
+  put = nil,
+  deleteSingle = nil 
 }
 
 function TMutation:read(iprot)
@@ -1243,9 +1257,9 @@ function TMutation:write(oprot)
   oprot:writeStructEnd()
 end
 
-TRowMutations = __TObject:new{
-  row,
-  mutations
+local TRowMutations = __TObject:new{
+  row = nil,
+  mutations = nil 
 }
 
 function TRowMutations:read(iprot)
@@ -1301,9 +1315,9 @@ function TRowMutations:write(oprot)
   oprot:writeStructEnd()
 end
 
-TIOError = TException:new{
+local TIOError = TException:new{
   __type = 'TIOError',
-  message
+  message = nil
 }
 
 function TIOError:read(iprot)
@@ -1337,9 +1351,9 @@ function TIOError:write(oprot)
   oprot:writeStructEnd()
 end
 
-TIllegalArgument = TException:new{
+local TIllegalArgument = TException:new{
   __type = 'TIllegalArgument',
-  message
+  message = nil
 }
 
 function TIllegalArgument:read(iprot)
@@ -1372,3 +1386,22 @@ function TIllegalArgument:write(oprot)
   oprot:writeFieldStop()
   oprot:writeStructEnd()
 end
+
+return {
+TTimeRange = TTimeRange,
+TColumn= TColumn,
+TColumnValue= TColumnValue,
+TColumnIncrement =TColumnIncrement,
+TResult =TResult,
+TAuthorization=TAuthorization,
+TCellVisibility=TCellVisibility,
+TGet=TGet,
+TPut=TPut,
+TDelete=TDelete,
+TIncrement=TIncrement,
+TAppend=TAppend, TScan=TScan,
+TMutation= TMutation,
+TRowMutations= TRowMutations,
+TIOError= TIOError,
+TIllegalArgument= TIllegalArgument
+}

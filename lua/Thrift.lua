@@ -22,8 +22,8 @@
 --setmetatable(thrift, {__index = _G}) --> perf hit for accessing global methods
 --setfenv(1, thrift)
 
-package.cpath = package.cpath .. ';bin/?.so' -- TODO FIX
-function ttype(obj)
+-- package.cpath = package.cpath .. ';bin/?.so' -- TODO FIX
+local function ttype(obj)
   if type(obj) == 'table' and
     obj.__type and
     type(obj.__type) == 'string' then
@@ -32,7 +32,7 @@ function ttype(obj)
   return type(obj)
 end
 
-function terror(e)
+local function terror(e)
   if e and e.__tostring then
     error(e:__tostring())
     return
@@ -40,7 +40,7 @@ function terror(e)
   error(e)
 end
 
-function ttable_size(t)
+local function ttable_size(t)
   local count = 0
   for k, v in pairs(t) do
     count = count + 1
@@ -48,9 +48,8 @@ function ttable_size(t)
   return count
 end
 
-version = 0.10
 
-TType = {
+local TType = {
   STOP   = 0,
   VOID   = 1,
   BOOL   = 2,
@@ -70,7 +69,7 @@ TType = {
   UTF16  = 17
 }
 
-TMessageType = {
+local TMessageType = {
   CALL  = 1,
   REPLY = 2,
   EXCEPTION = 3,
@@ -78,7 +77,7 @@ TMessageType = {
 }
 
 -- Recursive __index function to achieve inheritance
-function __tobj_index(self, key)
+local function __tobj_index(self, key)
   local v = rawget(self, key)
   if v ~= nil then
     return v
@@ -93,7 +92,7 @@ function __tobj_index(self, key)
 end
 
 -- Basic Thrift-Lua Object
-__TObject = {
+local __TObject = {
   __type = '__TObject',
   __mt = {
     __index = __tobj_index
@@ -112,7 +111,7 @@ function __TObject:new(init_obj)
 end
 
 -- Return a string representation of any lua variable
-function thrift_print_r(t)
+local function thrift_print_r(t)
   local ret = ''
   local ltype = type(t)
   if (ltype == 'table') then
@@ -130,11 +129,11 @@ function thrift_print_r(t)
 end
 
 -- Basic Exception
-TException = __TObject:new{
-  message,
-  errorCode,
+local TException = __TObject:new({
+  message = nil,
+  errorCode = nil,
   __type = 'TException'
-}
+})
 function TException:__tostring()
   if self.message then
     return string.format('%s: %s', self.__type, self.message)
@@ -149,7 +148,7 @@ function TException:__tostring()
   end
 end
 
-TApplicationException = TException:new{
+local TApplicationException = TException:new({
   UNKNOWN                 = 0,
   UNKNOWN_METHOD          = 1,
   INVALID_MESSAGE_TYPE    = 2,
@@ -163,7 +162,7 @@ TApplicationException = TException:new{
   UNSUPPORTED_CLIENT_TYPE = 10,
   errorCode               = 0,
   __type = 'TApplicationException'
-}
+})
 
 function TApplicationException:__errorCodeToString()
   if self.errorCode == self.UNKNOWN_METHOD then
@@ -234,10 +233,10 @@ function TException:write(oprot)
 end
 
 -- Basic Client (used in generated lua code)
-__TClient = __TObject:new{
+local __TClient = __TObject:new({
   __type = '__TClient',
   _seqid = 0
-}
+})
 function __TClient:new(obj)
   if ttype(obj) ~= 'table' then
     error('TClient must be initialized with a table')
@@ -264,7 +263,7 @@ function __TClient:close()
 end
 
 -- Basic Processor (used in generated lua code)
-__TProcessor = __TObject:new{
+local __TProcessor = __TObject:new{
   __type = '__TProcessor'
 }
 function __TProcessor:new(obj)
@@ -279,3 +278,18 @@ function __TProcessor:new(obj)
 
   return __TObject.new(self, obj)
 end
+return { 
+version = 0.10,
+ttype = ttype,
+terror = terror,
+ttable_size = ttable_size,
+TType = TType,
+TMessageType = TMessageType,
+__TObject = __TObject,
+thrift_print_r = thrift_print_r,
+TException = TException,
+TApplicationException = TApplicationException,
+__TClient = __TClient,
+__TProcessor=__TProcessor
+}
+

@@ -17,11 +17,31 @@
 -- under the License.
 --
 
-require 'TProtocol'
-require 'libluabpack'
-require 'libluabitwise'
+local Thrift = require 'Thrift' 
+ 
+local ttype = Thrift.ttype 
+local terror = Thrift.terror 
+local ttable_size = Thrift.ttable_size 
+local TType = Thrift.TType 
+local TMessageType = Thrift.TMessageType 
+local __TObject = Thrift. __TObject 
+local thrift_print_r = Thrift.thrift_print_r 
+local TException = Thrift.TException 
+local TApplicationException = Thrift.TApplicationException 
+local __TClient = Thrift.__TClient 
+local __TProcessor= Thrift.__TProcessor
+-- require 'TProtocol'
+local TProtocol = require 'TProtocol'
+local	        TProtocolException = TProtocol.TProtocolException
+local		TProtocolBase =	TProtocol.TProtocolBase
+local		TProtocolFactory = TProtocol.TProtocolFactory
+ -- require 'libluabpack'
+-- require 'libluabitwise'
 
-TJSONProtocol = __TObject.new(TProtocolBase, {
+local libluabpack = require 'libluabpack'
+local libluabitwise = require 'libluabitwise'
+local liblualongnumber = require 'liblualongnumber'
+local TJSONProtocol = __TObject.new(TProtocolBase, {
   __type = 'TJSONProtocol',
   THRIFT_JSON_PROTOCOL_VERSION = 1,
   jsonContext = {},
@@ -30,7 +50,7 @@ TJSONProtocol = __TObject.new(TProtocolBase, {
   hasReadByte = ""
 })
 
-TTypeToString = {}
+local TTypeToString = {}
 TTypeToString[TType.BOOL]   = "tf"
 TTypeToString[TType.BYTE]   = "i8"
 TTypeToString[TType.I16]    = "i16"
@@ -43,7 +63,7 @@ TTypeToString[TType.LIST]   = "lst"
 TTypeToString[TType.SET]    = "set"
 TTypeToString[TType.MAP]    = "map"
 
-StringToTType = {
+local StringToTType = {
   tf  = TType.BOOL,
   i8  = TType.BYTE,
   i16 = TType.I16,
@@ -57,7 +77,7 @@ StringToTType = {
   lst = TType.LIST
 }
 
-JSONNode = {
+local JSONNode = {
   ObjectBegin = '{',
   ObjectEnd = '}',
   ArrayBegin = '[',
@@ -75,11 +95,11 @@ JSONNode = {
   EscapePrefix = "\\u00"
 }
 
-EscapeCharVals = {
+local EscapeCharVals = {
   '"', '\\', '\b', '\f', '\n', '\r', '\t'
 }
 
-JSONCharTable = {
+local JSONCharTable = {
   --0   1   2   3   4   5   6   7   8   9   A   B   C   D   E   F
     0,  0,  0,  0,  0,  0,  0,  0, 98,116,110,  0,102,114,  0,  0,
     0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
@@ -90,7 +110,8 @@ JSONCharTable = {
 local b='ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/'
 
 -- encoding
-function base64_encode(data)
+-- TODO use ngx.base64
+local function base64_encode(data)
     return ((data:gsub('.', function(x) 
         local r,b='',x:byte()
         for i=8,1,-1 do r=r..(b%2^i-b%2^(i-1)>0 and '1' or '0') end
@@ -104,7 +125,7 @@ function base64_encode(data)
 end
 
 -- decoding
-function base64_decode(data)
+local function base64_decode(data)
     data = string.gsub(data, '[^'..b..'=]', '')
     return (data:gsub('.', function(x)
         if (x == '=') then return '' end
@@ -176,16 +197,16 @@ end
 
 function TJSONProtocol:writeJSONEscapeChar(ch)
   self.trans:write(JSONNode.EscapePrefix)
-  local outCh = hexChar(libluabitwise.shiftr(ch, 4))
+  local outCh = self.hexChar(libluabitwise.shiftr(ch, 4))
   local buff = libluabpack.bpack('c', outCh)
   self.trans:write(buff)
-  outCh = hexChar(ch)
+  outCh = self.hexChar(ch)
   buff = libluabpack.bpack('c', outCh)
   self.trans:write(buff)
 end
 
 function TJSONProtocol:writeJSONChar(byte)
-  ch = string.byte(byte)
+  local ch = string.byte(byte)
   if ch >= 0x30 then
     if ch == JSONNode.Backslash then
       self.trans:write(JSONNode.Backslash)
@@ -710,7 +731,7 @@ function TJSONProtocol:readBinary()
   return self:readJSONBase64()
 end
 
-TJSONProtocolFactory = TProtocolFactory:new{
+local TJSONProtocolFactory = TProtocolFactory:new{
   __type = 'TJSONProtocolFactory',
 }
 

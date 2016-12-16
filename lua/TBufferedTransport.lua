@@ -17,9 +17,19 @@
 -- under the License.
 --
 
-require 'TTransport'
+local Thrift =require 'Thrift' 
+ 
+local ttype = Thrift.ttype 
+local terror = Thrift.terror 
+ -- require 'TTransport'
 
-TBufferedTransport = TTransportBase:new{
+local TTransport = require 'TTransport'
+
+local 	TTransportException = TTransport.TTransportException
+local	TTransportFactoryBase =TTransport.TTransportFactoryBase
+local	TServerTransportBase =	TTransport.TServerTransportBase
+local	TTransportBase = TTransport.TTransportBase
+local TBufferedTransport = TTransportBase:new{
   __type = 'TBufferedTransport',
   rBufSize = 2048,
   wBufSize = 2048,
@@ -75,7 +85,7 @@ function TBufferedTransport:flush()
   end
 end
 
-TBufferedTransportFactory = TTransportFactoryBase:new{
+local TBufferedTransportFactory = TTransportFactoryBase:new{
   __type = 'TBufferedTransportFactory'
 }
 
@@ -89,3 +99,7 @@ function TBufferedTransportFactory:getTransport(trans)
     trans = trans
   }
 end
+return {
+TBufferedTransport = TBufferedTransport,
+TBufferedTransportFactory = TBufferedTransportFactory
+}

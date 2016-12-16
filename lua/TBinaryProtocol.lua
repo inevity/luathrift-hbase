@@ -17,11 +17,31 @@
 -- under the License.
 --
 
-require 'TProtocol'
-require 'libluabpack'
-require 'libluabitwise'
+local Thrift = require 'Thrift' 
+ 
+local ttype = Thrift.ttype 
+local terror = Thrift.terror 
+local ttable_size = Thrift.ttable_size 
+local TType = Thrift.TType 
+local TMessageType = Thrift.TMessageType 
+local __TObject = Thrift. __TObject 
+local thrift_print_r = Thrift.thrift_print_r 
+local TException = Thrift.TException 
+local TApplicationException = Thrift.TApplicationException 
+local __TClient = Thrift.__TClient 
+local __TProcessor= Thrift.__TProcessor
+--require 'TProtocol'
+--require 'libluabpack'
+--require 'libluabitwise'
 
-TBinaryProtocol = __TObject.new(TProtocolBase, {
+local TProtocol = require 'TProtocol'
+local	        TProtocolException = TProtocol.TProtocolException
+local		TProtocolBase =	 TProtocol.TProtocolBase
+local		TProtocolFactory =  TProtocol.TProtocolFactory
+local libluabpack = require 'libluabpack'
+local libluabitwise = require 'libluabitwise'
+local liblualongnumber = require 'liblualongnumber'
+local TBinaryProtocol = __TObject.new(TProtocolBase, {
   __type = 'TBinaryProtocol',
   VERSION_MASK = -65536, -- 0xffff0000
   VERSION_1    = -2147418112, -- 0x80010000
@@ -244,7 +264,7 @@ function TBinaryProtocol:readString()
   return str
 end
 
-TBinaryProtocolFactory = TProtocolFactory:new{
+local TBinaryProtocolFactory = TProtocolFactory:new{
   __type = 'TBinaryProtocolFactory',
   strictRead = false
 }
@@ -262,3 +282,7 @@ function TBinaryProtocolFactory:getProtocol(trans)
     strictWrite = true
   }
 end
+return {
+TBinaryProtocolFactory =TBinaryProtocolFactory,
+TBinaryProtocol = TBinaryProtocol
+}

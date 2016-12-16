@@ -17,9 +17,22 @@
 -- under the License.
 --
 
-require 'Thrift'
+-- require 'Thrift'
 
-TTransportException = TException:new {
+local Thrift = require 'Thrift' 
+ 
+local ttype = Thrift.ttype 
+local terror = Thrift.terror 
+local ttable_size = Thrift.ttable_size 
+local TType = Thrift.TType 
+local TMessageType = Thrift.TMessageType 
+local __TObject = Thrift. __TObject 
+local thrift_print_r = Thrift.thrift_print_r 
+local TException = Thrift.TException 
+local TApplicationException = Thrift.TApplicationException 
+local __TClient = Thrift.__TClient 
+local __TProcessor= Thrift.__TProcessor
+local TTransportException = TException:new {
   UNKNOWN             = 0,
   NOT_OPEN            = 1,
   ALREADY_OPEN        = 2,
@@ -52,7 +65,7 @@ function TTransportException:__errorCodeToString()
   end
 end
 
-TTransportBase = __TObject:new{
+local TTransportBase = __TObject:new{
   __type = 'TTransportBase'
 }
 
@@ -78,16 +91,23 @@ end
 function TTransportBase:write(buf) end
 function TTransportBase:flush() end
 
-TServerTransportBase = __TObject:new{
+local TServerTransportBase = __TObject:new{
   __type = 'TServerTransportBase'
 }
 function TServerTransportBase:listen() end
 function TServerTransportBase:accept() end
 function TServerTransportBase:close() end
 
-TTransportFactoryBase = __TObject:new{
+local TTransportFactoryBase = __TObject:new{
   __type = 'TTransportFactoryBase'
 }
 function TTransportFactoryBase:getTransport(trans)
   return trans
 end
+return {
+
+	TTransportException = TTransportException,
+	TTransportFactoryBase = TTransportFactoryBase,
+	TServerTransportBase =	TServerTransportBase,
+	TTransportBase = TTransportBase
+}

@@ -16,16 +16,29 @@
 -- under the License.
 --
 
-require 'TTransport'
-require 'libluasocket'
+-- require 'TTransport'
+local TTransport = require 'TTransport'
+
+local 	TTransportException = TTransport.TTransportException
+local	TTransportFactoryBase =TTransport.TTransportFactoryBase
+local	TServerTransportBase =	TTransport.TServerTransportBase
+local	TTransportBase = TTransport.TTransportBase
+-- require 'libluasocket'
+-- local libluasocket = require 'libluasocket'
+local luasocket = require 'libluasocket'
+
+local Thrift =require 'Thrift' 
+ 
+local ttype = Thrift.ttype 
+local terror = Thrift.terror 
 
 -- TSocketBase
-TSocketBase = TTransportBase:new{
+local TSocketBase = TTransportBase:new{
   __type = 'TSocketBase',
   timeout = 1000,
   host = 'localhost',
   port = 9090,
-  handle
+  handle = nil
 }
 
 function TSocketBase:close()
@@ -53,7 +66,7 @@ function TSocketBase:setTimeout(timeout)
 end
 
 -- TSocket
-TSocket = TSocketBase:new{
+local TSocket = TSocketBase:new{
   __type = 'TSocket',
   host = 'localhost',
   port = 9090
@@ -102,7 +115,7 @@ function TSocket:flush()
 end
 
 -- TServerSocket
-TServerSocket = TSocketBase:new{
+local TServerSocket = TSocketBase:new{
   __type = 'TServerSocket',
   host = 'localhost',
   port = 9090

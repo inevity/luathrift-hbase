@@ -16,10 +16,25 @@
 -- specific language governing permissions and limitations
 -- under the License.
 --
+local Thrift = require 'Thrift' 
+ 
+local ttype = Thrift.ttype 
+local terror = Thrift.terror 
 
-require 'TTransport'
+-- require 'TTransport'
 
-THttpTransport = TTransportBase:new{
+local TTransport = require 'TTransport'
+
+local 	TTransportException = TTransport.TTransportException
+local	TTransportFactoryBase =TTransport.TTransportFactoryBase
+local	TServerTransportBase =	TTransport.TServerTransportBase
+local	TTransportBase = TTransport.TTransportBase
+
+local TProtocol = require 'TProtocol'
+local	        TProtocolException = TProtocol.TProtocolException
+--		TProtocolBase =	TProtocolBase,
+--		TProtocolFactory = TProtocolFactory
+local THttpTransport = TTransportBase:new{
   __type = 'THttpTransport',
   path = '/',
   wBuf = '',
@@ -169,7 +184,7 @@ function THttpTransport:flush()
   self.trans:flush()
 end
 
-THttpTransportFactory = TTransportFactoryBase:new{
+local THttpTransportFactory = TTransportFactoryBase:new{
   __type = 'THttpTransportFactory'
 }
 function THttpTransportFactory:getTransport(trans)
@@ -180,3 +195,7 @@ function THttpTransportFactory:getTransport(trans)
   end
   return THttpTransport:new{trans = trans}
 end
+return {
+THttpTransport = THttpTransport,
+THttpTransportFactory = THttpTransportFactory
+}

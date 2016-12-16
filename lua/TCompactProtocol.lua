@@ -17,12 +17,23 @@
 -- under the License.
 --
 
-require 'TProtocol'
-require 'libluabpack'
-require 'libluabitwise'
-require 'liblualongnumber'
+--require 'TProtocol'
+local TProtocol = require 'TProtocol'
+local	        TProtocolException = TProtocol.TProtocolException
+local		TProtocolBase =	 TProtocol.TProtocolBase
+local		TProtocolFactory =  TProtocol.TProtocolFactory
+local libluabpack = require 'libluabpack'
+local libluabitwise = require 'libluabitwise'
+local liblualongnumber = require 'liblualongnumber'
+local Thrift =require 'Thrift' 
+ 
+local ttype = Thrift.ttype 
+local terror = Thrift.terror 
+local ttable_size = Thrift.ttable_size 
+local TType = Thrift.TType 
+local __TObject = Thrift. __TObject 
 
-TCompactProtocol = __TObject.new(TProtocolBase, {
+local TCompactProtocol = __TObject.new(TProtocolBase, {
   __type = 'TCompactProtocol',
   COMPACT_PROTOCOL_ID       = 0x82,
   COMPACT_VERSION           = 1,
@@ -49,7 +60,7 @@ TCompactProtocol = __TObject.new(TProtocolBase, {
   boolValueIsNotNull = false,
 })
 
-TCompactType = {
+local TCompactType = {
   COMPACT_BOOLEAN_TRUE  = 0x01,
   COMPACT_BOOLEAN_FALSE = 0x02,
   COMPACT_BYTE          = 0x03,
@@ -64,7 +75,7 @@ TCompactType = {
   COMPACT_STRUCT        = 0x0C
 }
 
-TTypeToCompactType = {}
+local TTypeToCompactType = {}
 TTypeToCompactType[TType.STOP]   = TType.STOP
 TTypeToCompactType[TType.BOOL]   = TCompactType.COMPACT_BOOLEAN_TRUE
 TTypeToCompactType[TType.BYTE]   = TCompactType.COMPACT_BYTE
@@ -78,7 +89,7 @@ TTypeToCompactType[TType.SET]    = TCompactType.COMPACT_SET
 TTypeToCompactType[TType.MAP]    = TCompactType.COMPACT_MAP
 TTypeToCompactType[TType.STRUCT] = TCompactType.COMPACT_STRUCT
 
-CompactTypeToTType = {}
+local CompactTypeToTType = {}
 CompactTypeToTType[TType.STOP]                        = TType.STOP
 CompactTypeToTType[TCompactType.COMPACT_BOOLEAN_TRUE] = TType.BOOL
 CompactTypeToTType[TCompactType.COMPACT_BOOLEAN_FALSE] = TType.BOOL
@@ -302,8 +313,8 @@ function TCompactProtocol:readFieldBegin()
     id = self.lastFieldId + modifier
   end
   if ttype == TType.BOOL then
-    boolValue = libluabitwise.band(field_and_ttype, 0x0f) == TCompactType.COMPACT_BOOLEAN_TRUE
-    boolValueIsNotNull = true
+    self.boolValue = libluabitwise.band(field_and_ttype, 0x0f) == TCompactType.COMPACT_BOOLEAN_TRUE
+    self.boolValueIsNotNull = true
   end
   self.lastFieldId = id
   return nil, ttype, id
@@ -350,9 +361,9 @@ function TCompactProtocol:readSetEnd()
 end
 
 function TCompactProtocol:readBool()
-  if boolValueIsNotNull then
-    boolValueIsNotNull = true
-    return boolValue
+  if self.boolValueIsNotNull then
+    self.boolValueIsNotNull = true
+    return self.boolValue
   end
   local val = self:readSignByte()
   if val == TCompactType.COMPACT_BOOLEAN_TRUE then
@@ -410,7 +421,7 @@ function TCompactProtocol:readVarint32()
   local shiftl = 0
   local result = 0
   while true do
-    b = self:readByte()
+    local b = self:readByte()
     result = libluabitwise.bor(result,
              libluabitwise.shiftl(libluabitwise.band(b, 0x7f), shiftl))
     if libluabitwise.band(b, 0x80) ~= 0x80 then
@@ -426,8 +437,8 @@ function TCompactProtocol:readVarint64()
   local data = result(0)
   local shiftl = 0
   while true do
-    b = self:readByte()
-    endFlag, data = libluabpack.fromVarint64(b, shiftl, data)
+    local b = self:readByte()
+    local endFlag, data = libluabpack.fromVarint64(b, shiftl, data)
     shiftl = shiftl + 7
     if endFlag == 0 then
       break
@@ -440,7 +451,7 @@ function TCompactProtocol:getTType(ctype)
   return CompactTypeToTType[libluabitwise.band(ctype, 0x0f)]
 end
 
-TCompactProtocolFactory = TProtocolFactory:new{
+local TCompactProtocolFactory = TProtocolFactory:new{
   __type = 'TCompactProtocolFactory',
 }
 
@@ -455,3 +466,7 @@ function TCompactProtocolFactory:getProtocol(trans)
     trans = trans
   }
 end
+return {
+TCompactProtocol = TCompactProtocol,
+TCompactProtocolFactory = TCompactProtocolFactory  
+}

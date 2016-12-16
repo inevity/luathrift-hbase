@@ -17,12 +17,30 @@
 -- under the License.
 --
 
-require 'Thrift'
-require 'TFramedTransport'
-require 'TBinaryProtocol'
+-- require 'Thrift'
+local Thrift = require 'Thrift' 
+ 
+local ttype = Thrift.ttype 
+local terror = Thrift.terror 
+-- local ttable_size = Thrift.ttable_size 
+-- local TType = Thrift.TType 
+-- local TMessageType = Thrift.TMessageType 
+local __TObject = Thrift. __TObject 
+-- local thrift_print_r = Thrift.thrift_print_r 
+-- local TException = Thrift.TException 
+-- local TApplicationException = Thrift.TApplicationException 
+-- local __TClient = Thrift.__TClient 
+-- local __TProcessor= Thrift.__TProcessor
+-- require 'TFramedTransport'
+local TFramedTransport = require 'TFramedTransport'
+-- local  TFramedTransport = TFramedTransport.TFramedTransport
+local TFramedTransportFactory = TFramedTransport.TFramedTransportFactory
+ -- require 'TBinaryProtocol'
+local TBinaryProtocol = require 'TBinaryProtocol'
 
+local TBinaryProtocolFactory =TBinaryProtocol.TBinaryProtocolFactory
 -- TServer
-TServer = __TObject:new{
+local TServer = __TObject:new{
   __type = 'TServer'
 }
 
@@ -120,7 +138,7 @@ end
 
 -- TSimpleServer
 --  Single threaded server that handles one transport (connection)
-TSimpleServer = __TObject:new(TServer, {
+local TSimpleServer = __TObject:new(TServer, {
   __type = 'TSimpleServer',
   __stop = false
 })
@@ -129,7 +147,7 @@ function TSimpleServer:serve()
   self.serverTransport:listen()
   self:_preServe()
   while not self.__stop do
-    client = self.serverTransport:accept()
+    local client = self.serverTransport:accept()
     self:handle(client)
   end
   self:close()

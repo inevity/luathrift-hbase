@@ -17,9 +17,19 @@
 -- under the License.
 --
 
-require 'TTransport'
+local Thrift = require 'Thrift' 
+ 
+ -- local ttype = Thrift.ttype 
+local terror = Thrift.terror 
+-- require 'TTransport'
+local TTransport = require 'TTransport'
 
-TMemoryBuffer = TTransportBase:new{
+local 	TTransportException = TTransport.TTransportException
+-- local	TTransportFactoryBase =TTransport.TTransportFactoryBase
+-- local	TServerTransportBase =	TTransport.TServerTransportBase
+local	TTransportBase = TTransport.TTransportBase
+
+local TMemoryBuffer = TTransportBase:new{
   __type = 'TMemoryBuffer',
   buffer = '',
   bufferSize = 1024,
@@ -89,3 +99,4 @@ function TMemoryBuffer:write(buf)
 end
 
 function TMemoryBuffer:flush() end
+return TMemoryBuffer

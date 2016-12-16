@@ -17,9 +17,23 @@
 -- under the License.
 --
 
-require 'Thrift'
+-- require 'Thrift'
+local Thrift = require 'Thrift' 
+ 
+local ttype = Thrift.ttype 
+local terror = Thrift.terror 
+local ttable_size = Thrift.ttable_size 
+local TType = Thrift.TType 
+local TMessageType = Thrift.TMessageType 
+local __TObject = Thrift. __TObject 
+local thrift_print_r = Thrift.thrift_print_r 
+local TException = Thrift.TException 
+local TApplicationException = Thrift.TApplicationException 
+local __TClient = Thrift.__TClient 
+local __TProcessor= Thrift.__TProcessor
 
-TProtocolException = TException:new {
+
+local TProtocolException = TException:new {
   UNKNOWN          = 0,
   INVALID_DATA     = 1,
   NEGATIVE_SIZE    = 2,
@@ -48,9 +62,9 @@ function TProtocolException:__errorCodeToString()
   end
 end
 
-TProtocolBase = __TObject:new{
+local TProtocolBase = __TObject:new{
   __type = 'TProtocolBase',
-  trans
+  trans = nil
 }
 
 function TProtocolBase:new(obj)
@@ -156,7 +170,13 @@ function TProtocolBase:skip(ttype)
   end
 end
 
-TProtocolFactory = __TObject:new{
+local TProtocolFactory = __TObject:new{
   __type = 'TProtocolFactory',
 }
 function TProtocolFactory:getProtocol(trans) end
+return {
+	        TProtocolException = TProtocolException,
+		TProtocolBase =	TProtocolBase,
+		TProtocolFactory = TProtocolFactory
+	}
+

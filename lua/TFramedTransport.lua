@@ -17,10 +17,33 @@
 -- under the License.
 --
 
-require 'TTransport'
-require 'libluabpack'
+local TTransport = require 'TTransport'
 
-TFramedTransport = TTransportBase:new{
+local 	TTransportException = TTransport.TTransportException
+local	TTransportFactoryBase =TTransport.TTransportFactoryBase
+local	TServerTransportBase =	TTransport.TServerTransportBase
+local	TTransportBase = TTransport.TTransportBase
+local libluabpack = require 'libluabpack'
+
+local Thrift =require 'Thrift' 
+ 
+local ttype = Thrift.ttype 
+local terror = Thrift.terror 
+local ttable_size = Thrift.ttable_size 
+local TType = Thrift.TType 
+local TMessageType = Thrift.TMessageType 
+local __TObject = Thrift. __TObject 
+local thrift_print_r = Thrift.thrift_print_r 
+local TException = Thrift.TException 
+local TApplicationException = Thrift.TApplicationException 
+local __TClient = Thrift.__TClient 
+local __TProcessor= Thrift.__TProcessor
+
+local TProtocol = require 'TProtocol'
+local	        TProtocolException = TProtocol.TProtocolException
+--		TProtocolBase =	TProtocolBase,
+--		TProtocolFactory = TProtocolFactory
+local TFramedTransport = TTransportBase:new{
   __type = 'TFramedTransport',
   doRead = true,
   doWrite = true,
@@ -105,7 +128,7 @@ function TFramedTransport:flush()
   self.trans:flush()
 end
 
-TFramedTransportFactory = TTransportFactoryBase:new{
+local TFramedTransportFactory = TTransportFactoryBase:new{
   __type = 'TFramedTransportFactory'
 }
 function TFramedTransportFactory:getTransport(trans)
@@ -116,3 +139,7 @@ function TFramedTransportFactory:getTransport(trans)
   end
   return TFramedTransport:new{trans = trans}
 end
+return {
+ TFramedTransport = TFramedTransport,
+TFramedTransportFactory = TFramedTransportFactory
+}

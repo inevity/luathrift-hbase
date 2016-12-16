@@ -6,10 +6,1717 @@
 --
 
 
-require 'Thrift'
-require 'hbase_ttypes'
 
-THBaseServiceClient = __TObject.new(__TClient, {
+local Thrift = require 'Thrift' 
+ 
+local ttype = Thrift.ttype 
+local terror = Thrift.terror 
+local ttable_size = Thrift.ttable_size 
+local TType = Thrift.TType 
+local TMessageType = Thrift.TMessageType 
+local __TObject = Thrift. __TObject 
+local thrift_print_r = Thrift.thrift_print_r 
+local TException = Thrift.TException 
+local TApplicationException = Thrift.TApplicationException 
+local __TClient = Thrift.__TClient 
+local __TProcessor= Thrift.__TProcessor
+
+
+local hbase_ttypes = require 'hbase_ttypes' 
+local TTimeRange =  hbase_ttypes.TTimeRange
+local TColumn= hbase_ttypes.TColumn
+local TColumnValue=  hbase_ttypes.TColumnValue
+local TColumnIncrement = hbase_ttypes.TColumnIncrement
+local TResult = hbase_ttypes.TResult
+local TAuthorization= hbase_ttypes.TAuthorization
+local TCellVisibility= hbase_ttypes.TCellVisibility
+local TGet= hbase_ttypes.TGet
+local TPut= hbase_ttypes.TPut
+local TDelete= hbase_ttypes.TDelete
+local TIncrement= hbase_ttypes.TIncrement
+local TAppend= hbase_ttypes.TAppend
+local TScan= hbase_ttypes.TScan
+local TMutation= hbase_ttypes.TMutation
+local TRowMutations= hbase_ttypes.TRowMutations
+local TIOError= hbase_ttypes.TIOError
+local TIllegalArgument= hbase_ttypes.TIllegalArgument
+
+-- HELPER FUNCTIONS AND STRUCTURES
+
+local exists_args = __TObject:new{
+  table = nil,
+  get = nil
+}
+
+function exists_args:read(iprot)
+  iprot:readStructBegin()
+  while true do
+    local fname, ftype, fid = iprot:readFieldBegin()
+    if ftype == TType.STOP then
+      break
+    elseif fid == 1 then
+      if ftype == TType.STRING then
+        self.table = iprot:readString()
+      else
+        iprot:skip(ftype)
+      end
+    elseif fid == 2 then
+      if ftype == TType.STRUCT then
+        self.get = TGet:new{}
+        self.get:read(iprot)
+      else
+        iprot:skip(ftype)
+      end
+    else
+      iprot:skip(ftype)
+    end
+    iprot:readFieldEnd()
+  end
+  iprot:readStructEnd()
+end
+
+function exists_args:write(oprot)
+  oprot:writeStructBegin('exists_args')
+  if self.table ~= nil then
+    oprot:writeFieldBegin('table', TType.STRING, 1)
+    oprot:writeString(self.table)
+    oprot:writeFieldEnd()
+  end
+  if self.get ~= nil then
+    oprot:writeFieldBegin('get', TType.STRUCT, 2)
+    self.get:write(oprot)
+    oprot:writeFieldEnd()
+  end
+  oprot:writeFieldStop()
+  oprot:writeStructEnd()
+end
+
+local exists_result = __TObject:new{
+  success = nil,
+  io = nil
+}
+
+function exists_result:read(iprot)
+  iprot:readStructBegin()
+  while true do
+    local fname, ftype, fid = iprot:readFieldBegin()
+    if ftype == TType.STOP then
+      break
+    elseif fid == 0 then
+      if ftype == TType.BOOL then
+        self.success = iprot:readBool()
+      else
+        iprot:skip(ftype)
+      end
+    elseif fid == 1 then
+      if ftype == TType.STRUCT then
+        self.io = TIOError:new{}
+        self.io:read(iprot)
+      else
+        iprot:skip(ftype)
+      end
+    else
+      iprot:skip(ftype)
+    end
+    iprot:readFieldEnd()
+  end
+  iprot:readStructEnd()
+end
+
+function exists_result:write(oprot)
+  oprot:writeStructBegin('exists_result')
+  if self.success ~= nil then
+    oprot:writeFieldBegin('success', TType.BOOL, 0)
+    oprot:writeBool(self.success)
+    oprot:writeFieldEnd()
+  end
+  if self.io ~= nil then
+    oprot:writeFieldBegin('io', TType.STRUCT, 1)
+    self.io:write(oprot)
+    oprot:writeFieldEnd()
+  end
+  oprot:writeFieldStop()
+  oprot:writeStructEnd()
+end
+
+local get_args = __TObject:new{
+  table = nil,
+  get = nil
+}
+
+function get_args:read(iprot)
+  iprot:readStructBegin()
+  while true do
+    local fname, ftype, fid = iprot:readFieldBegin()
+    if ftype == TType.STOP then
+      break
+    elseif fid == 1 then
+      if ftype == TType.STRING then
+        self.table = iprot:readString()
+      else
+        iprot:skip(ftype)
+      end
+    elseif fid == 2 then
+      if ftype == TType.STRUCT then
+        self.get = TGet:new{}
+        self.get:read(iprot)
+      else
+        iprot:skip(ftype)
+      end
+    else
+      iprot:skip(ftype)
+    end
+    iprot:readFieldEnd()
+  end
+  iprot:readStructEnd()
+end
+
+function get_args:write(oprot)
+  oprot:writeStructBegin('get_args')
+  if self.table ~= nil then
+    oprot:writeFieldBegin('table', TType.STRING, 1)
+    oprot:writeString(self.table)
+    oprot:writeFieldEnd()
+  end
+  if self.get ~= nil then
+    oprot:writeFieldBegin('get', TType.STRUCT, 2)
+    self.get:write(oprot)
+    oprot:writeFieldEnd()
+  end
+  oprot:writeFieldStop()
+  oprot:writeStructEnd()
+end
+
+local get_result = __TObject:new{
+  success = nil,
+  io = nil
+}
+
+function get_result:read(iprot)
+  iprot:readStructBegin()
+  while true do
+    local fname, ftype, fid = iprot:readFieldBegin()
+    if ftype == TType.STOP then
+      break
+    elseif fid == 0 then
+      if ftype == TType.STRUCT then
+        self.success = TResult:new{}
+        self.success:read(iprot)
+      else
+        iprot:skip(ftype)
+      end
+    elseif fid == 1 then
+      if ftype == TType.STRUCT then
+        self.io = TIOError:new{}
+        self.io:read(iprot)
+      else
+        iprot:skip(ftype)
+      end
+    else
+      iprot:skip(ftype)
+    end
+    iprot:readFieldEnd()
+  end
+  iprot:readStructEnd()
+end
+
+function get_result:write(oprot)
+  oprot:writeStructBegin('get_result')
+  if self.success ~= nil then
+    oprot:writeFieldBegin('success', TType.STRUCT, 0)
+    self.success:write(oprot)
+    oprot:writeFieldEnd()
+  end
+  if self.io ~= nil then
+    oprot:writeFieldBegin('io', TType.STRUCT, 1)
+    self.io:write(oprot)
+    oprot:writeFieldEnd()
+  end
+  oprot:writeFieldStop()
+  oprot:writeStructEnd()
+end
+
+local getMultiple_args = __TObject:new{
+  table = nil,
+  gets = nil
+}
+
+function getMultiple_args:read(iprot)
+  iprot:readStructBegin()
+  while true do
+    local fname, ftype, fid = iprot:readFieldBegin()
+    if ftype == TType.STOP then
+      break
+    elseif fid == 1 then
+      if ftype == TType.STRING then
+        self.table = iprot:readString()
+      else
+        iprot:skip(ftype)
+      end
+    elseif fid == 2 then
+      if ftype == TType.LIST then
+        self.gets = {}
+        local _etype105, _size102 = iprot:readListBegin()
+        for _i=1,_size102 do
+          local _elem106 = TGet:new{}
+          _elem106:read(iprot)
+          table.insert(self.gets, _elem106)
+        end
+        iprot:readListEnd()
+      else
+        iprot:skip(ftype)
+      end
+    else
+      iprot:skip(ftype)
+    end
+    iprot:readFieldEnd()
+  end
+  iprot:readStructEnd()
+end
+
+function getMultiple_args:write(oprot)
+  oprot:writeStructBegin('getMultiple_args')
+  if self.table ~= nil then
+    oprot:writeFieldBegin('table', TType.STRING, 1)
+    oprot:writeString(self.table)
+    oprot:writeFieldEnd()
+  end
+  if self.gets ~= nil then
+    oprot:writeFieldBegin('gets', TType.LIST, 2)
+    oprot:writeListBegin(TType.STRUCT, #self.gets)
+    for _,iter107 in ipairs(self.gets) do
+      iter107:write(oprot)
+    end
+    oprot:writeListEnd()
+    oprot:writeFieldEnd()
+  end
+  oprot:writeFieldStop()
+  oprot:writeStructEnd()
+end
+
+local getMultiple_result = __TObject:new{
+  success = nil,
+  io = nil
+}
+
+function getMultiple_result:read(iprot)
+  iprot:readStructBegin()
+  while true do
+    local fname, ftype, fid = iprot:readFieldBegin()
+    if ftype == TType.STOP then
+      break
+    elseif fid == 0 then
+      if ftype == TType.LIST then
+        self.success = {}
+        local _etype111, _size108 = iprot:readListBegin()
+        for _i=1,_size108 do
+          local _elem112 = TResult:new{}
+          _elem112:read(iprot)
+          table.insert(self.success, _elem112)
+        end
+        iprot:readListEnd()
+      else
+        iprot:skip(ftype)
+      end
+    elseif fid == 1 then
+      if ftype == TType.STRUCT then
+        self.io = TIOError:new{}
+        self.io:read(iprot)
+      else
+        iprot:skip(ftype)
+      end
+    else
+      iprot:skip(ftype)
+    end
+    iprot:readFieldEnd()
+  end
+  iprot:readStructEnd()
+end
+
+function getMultiple_result:write(oprot)
+  oprot:writeStructBegin('getMultiple_result')
+  if self.success ~= nil then
+    oprot:writeFieldBegin('success', TType.LIST, 0)
+    oprot:writeListBegin(TType.STRUCT, #self.success)
+    for _,iter113 in ipairs(self.success) do
+      iter113:write(oprot)
+    end
+    oprot:writeListEnd()
+    oprot:writeFieldEnd()
+  end
+  if self.io ~= nil then
+    oprot:writeFieldBegin('io', TType.STRUCT, 1)
+    self.io:write(oprot)
+    oprot:writeFieldEnd()
+  end
+  oprot:writeFieldStop()
+  oprot:writeStructEnd()
+end
+
+local put_args = __TObject:new{
+  table = nil,
+  put = nil 
+}
+
+function put_args:read(iprot)
+  iprot:readStructBegin()
+  while true do
+    local fname, ftype, fid = iprot:readFieldBegin()
+    if ftype == TType.STOP then
+      break
+    elseif fid == 1 then
+      if ftype == TType.STRING then
+        self.table = iprot:readString()
+      else
+        iprot:skip(ftype)
+      end
+    elseif fid == 2 then
+      if ftype == TType.STRUCT then
+        self.put = TPut:new{}
+        self.put:read(iprot)
+      else
+        iprot:skip(ftype)
+      end
+    else
+      iprot:skip(ftype)
+    end
+    iprot:readFieldEnd()
+  end
+  iprot:readStructEnd()
+end
+
+function put_args:write(oprot)
+  oprot:writeStructBegin('put_args')
+  if self.table ~= nil then
+    oprot:writeFieldBegin('table', TType.STRING, 1)
+    oprot:writeString(self.table)
+    oprot:writeFieldEnd()
+  end
+  if self.put ~= nil then
+    oprot:writeFieldBegin('put', TType.STRUCT, 2)
+    self.put:write(oprot)
+    oprot:writeFieldEnd()
+  end
+  oprot:writeFieldStop()
+  oprot:writeStructEnd()
+end
+
+local put_result = __TObject:new{
+  io = nil
+}
+
+function put_result:read(iprot)
+  iprot:readStructBegin()
+  while true do
+    local fname, ftype, fid = iprot:readFieldBegin()
+    if ftype == TType.STOP then
+      break
+    elseif fid == 1 then
+      if ftype == TType.STRUCT then
+        self.io = TIOError:new{}
+        self.io:read(iprot)
+      else
+        iprot:skip(ftype)
+      end
+    else
+      iprot:skip(ftype)
+    end
+    iprot:readFieldEnd()
+  end
+  iprot:readStructEnd()
+end
+
+function put_result:write(oprot)
+  oprot:writeStructBegin('put_result')
+  if self.io ~= nil then
+    oprot:writeFieldBegin('io', TType.STRUCT, 1)
+    self.io:write(oprot)
+    oprot:writeFieldEnd()
+  end
+  oprot:writeFieldStop()
+  oprot:writeStructEnd()
+end
+
+local checkAndPut_args = __TObject:new{
+  table = nil ,
+  row = nil,
+  family = nil ,
+  qualifier = nil ,
+  value = nil ,
+  put = nil
+}
+
+function checkAndPut_args:read(iprot)
+  iprot:readStructBegin()
+  while true do
+    local fname, ftype, fid = iprot:readFieldBegin()
+    if ftype == TType.STOP then
+      break
+    elseif fid == 1 then
+      if ftype == TType.STRING then
+        self.table = iprot:readString()
+      else
+        iprot:skip(ftype)
+      end
+    elseif fid == 2 then
+      if ftype == TType.STRING then
+        self.row = iprot:readString()
+      else
+        iprot:skip(ftype)
+      end
+    elseif fid == 3 then
+      if ftype == TType.STRING then
+        self.family = iprot:readString()
+      else
+        iprot:skip(ftype)
+      end
+    elseif fid == 4 then
+      if ftype == TType.STRING then
+        self.qualifier = iprot:readString()
+      else
+        iprot:skip(ftype)
+      end
+    elseif fid == 5 then
+      if ftype == TType.STRING then
+        self.value = iprot:readString()
+      else
+        iprot:skip(ftype)
+      end
+    elseif fid == 6 then
+      if ftype == TType.STRUCT then
+        self.put = TPut:new{}
+        self.put:read(iprot)
+      else
+        iprot:skip(ftype)
+      end
+    else
+      iprot:skip(ftype)
+    end
+    iprot:readFieldEnd()
+  end
+  iprot:readStructEnd()
+end
+
+function checkAndPut_args:write(oprot)
+  oprot:writeStructBegin('checkAndPut_args')
+  if self.table ~= nil then
+    oprot:writeFieldBegin('table', TType.STRING, 1)
+    oprot:writeString(self.table)
+    oprot:writeFieldEnd()
+  end
+  if self.row ~= nil then
+    oprot:writeFieldBegin('row', TType.STRING, 2)
+    oprot:writeString(self.row)
+    oprot:writeFieldEnd()
+  end
+  if self.family ~= nil then
+    oprot:writeFieldBegin('family', TType.STRING, 3)
+    oprot:writeString(self.family)
+    oprot:writeFieldEnd()
+  end
+  if self.qualifier ~= nil then
+    oprot:writeFieldBegin('qualifier', TType.STRING, 4)
+    oprot:writeString(self.qualifier)
+    oprot:writeFieldEnd()
+  end
+  if self.value ~= nil then
+    oprot:writeFieldBegin('value', TType.STRING, 5)
+    oprot:writeString(self.value)
+    oprot:writeFieldEnd()
+  end
+  if self.put ~= nil then
+    oprot:writeFieldBegin('put', TType.STRUCT, 6)
+    self.put:write(oprot)
+    oprot:writeFieldEnd()
+  end
+  oprot:writeFieldStop()
+  oprot:writeStructEnd()
+end
+
+local checkAndPut_result = __TObject:new{
+  success = nil,
+  io = nil
+}
+
+function checkAndPut_result:read(iprot)
+  iprot:readStructBegin()
+  while true do
+    local fname, ftype, fid = iprot:readFieldBegin()
+    if ftype == TType.STOP then
+      break
+    elseif fid == 0 then
+      if ftype == TType.BOOL then
+        self.success = iprot:readBool()
+      else
+        iprot:skip(ftype)
+      end
+    elseif fid == 1 then
+      if ftype == TType.STRUCT then
+        self.io = TIOError:new{}
+        self.io:read(iprot)
+      else
+        iprot:skip(ftype)
+      end
+    else
+      iprot:skip(ftype)
+    end
+    iprot:readFieldEnd()
+  end
+  iprot:readStructEnd()
+end
+
+function checkAndPut_result:write(oprot)
+  oprot:writeStructBegin('checkAndPut_result')
+  if self.success ~= nil then
+    oprot:writeFieldBegin('success', TType.BOOL, 0)
+    oprot:writeBool(self.success)
+    oprot:writeFieldEnd()
+  end
+  if self.io ~= nil then
+    oprot:writeFieldBegin('io', TType.STRUCT, 1)
+    self.io:write(oprot)
+    oprot:writeFieldEnd()
+  end
+  oprot:writeFieldStop()
+  oprot:writeStructEnd()
+end
+
+local putMultiple_args = __TObject:new{
+  table = nil,
+  puts = nil
+}
+
+function putMultiple_args:read(iprot)
+  iprot:readStructBegin()
+  while true do
+    local fname, ftype, fid = iprot:readFieldBegin()
+    if ftype == TType.STOP then
+      break
+    elseif fid == 1 then
+      if ftype == TType.STRING then
+        self.table = iprot:readString()
+      else
+        iprot:skip(ftype)
+      end
+    elseif fid == 2 then
+      if ftype == TType.LIST then
+        self.puts = {}
+        local _etype117, _size114 = iprot:readListBegin()
+        for _i=1,_size114 do
+          local _elem118 = TPut:new{}
+          _elem118:read(iprot)
+          table.insert(self.puts, _elem118)
+        end
+        iprot:readListEnd()
+      else
+        iprot:skip(ftype)
+      end
+    else
+      iprot:skip(ftype)
+    end
+    iprot:readFieldEnd()
+  end
+  iprot:readStructEnd()
+end
+
+function putMultiple_args:write(oprot)
+  oprot:writeStructBegin('putMultiple_args')
+  if self.table ~= nil then
+    oprot:writeFieldBegin('table', TType.STRING, 1)
+    oprot:writeString(self.table)
+    oprot:writeFieldEnd()
+  end
+  if self.puts ~= nil then
+    oprot:writeFieldBegin('puts', TType.LIST, 2)
+    oprot:writeListBegin(TType.STRUCT, #self.puts)
+    for _,iter119 in ipairs(self.puts) do
+      iter119:write(oprot)
+    end
+    oprot:writeListEnd()
+    oprot:writeFieldEnd()
+  end
+  oprot:writeFieldStop()
+  oprot:writeStructEnd()
+end
+
+local putMultiple_result = __TObject:new{
+  io = nil
+}
+
+function putMultiple_result:read(iprot)
+  iprot:readStructBegin()
+  while true do
+    local fname, ftype, fid = iprot:readFieldBegin()
+    if ftype == TType.STOP then
+      break
+    elseif fid == 1 then
+      if ftype == TType.STRUCT then
+        self.io = TIOError:new{}
+        self.io:read(iprot)
+      else
+        iprot:skip(ftype)
+      end
+    else
+      iprot:skip(ftype)
+    end
+    iprot:readFieldEnd()
+  end
+  iprot:readStructEnd()
+end
+
+function putMultiple_result:write(oprot)
+  oprot:writeStructBegin('putMultiple_result')
+  if self.io ~= nil then
+    oprot:writeFieldBegin('io', TType.STRUCT, 1)
+    self.io:write(oprot)
+    oprot:writeFieldEnd()
+  end
+  oprot:writeFieldStop()
+  oprot:writeStructEnd()
+end
+
+local deleteSingle_args = __TObject:new{
+  table = nil,
+  deleteSingle = nil
+}
+
+function deleteSingle_args:read(iprot)
+  iprot:readStructBegin()
+  while true do
+    local fname, ftype, fid = iprot:readFieldBegin()
+    if ftype == TType.STOP then
+      break
+    elseif fid == 1 then
+      if ftype == TType.STRING then
+        self.table = iprot:readString()
+      else
+        iprot:skip(ftype)
+      end
+    elseif fid == 2 then
+      if ftype == TType.STRUCT then
+        self.deleteSingle = TDelete:new{}
+        self.deleteSingle:read(iprot)
+      else
+        iprot:skip(ftype)
+      end
+    else
+      iprot:skip(ftype)
+    end
+    iprot:readFieldEnd()
+  end
+  iprot:readStructEnd()
+end
+
+function deleteSingle_args:write(oprot)
+  oprot:writeStructBegin('deleteSingle_args')
+  if self.table ~= nil then
+    oprot:writeFieldBegin('table', TType.STRING, 1)
+    oprot:writeString(self.table)
+    oprot:writeFieldEnd()
+  end
+  if self.deleteSingle ~= nil then
+    oprot:writeFieldBegin('deleteSingle', TType.STRUCT, 2)
+    self.deleteSingle:write(oprot)
+    oprot:writeFieldEnd()
+  end
+  oprot:writeFieldStop()
+  oprot:writeStructEnd()
+end
+
+local deleteSingle_result = __TObject:new{
+  io = nil
+}
+
+function deleteSingle_result:read(iprot)
+  iprot:readStructBegin()
+  while true do
+    local fname, ftype, fid = iprot:readFieldBegin()
+    if ftype == TType.STOP then
+      break
+    elseif fid == 1 then
+      if ftype == TType.STRUCT then
+        self.io = TIOError:new{}
+        self.io:read(iprot)
+      else
+        iprot:skip(ftype)
+      end
+    else
+      iprot:skip(ftype)
+    end
+    iprot:readFieldEnd()
+  end
+  iprot:readStructEnd()
+end
+
+function deleteSingle_result:write(oprot)
+  oprot:writeStructBegin('deleteSingle_result')
+  if self.io ~= nil then
+    oprot:writeFieldBegin('io', TType.STRUCT, 1)
+    self.io:write(oprot)
+    oprot:writeFieldEnd()
+  end
+  oprot:writeFieldStop()
+  oprot:writeStructEnd()
+end
+
+local deleteMultiple_args = __TObject:new{
+  table = nil,
+  deletes = nil
+}
+
+function deleteMultiple_args:read(iprot)
+  iprot:readStructBegin()
+  while true do
+    local fname, ftype, fid = iprot:readFieldBegin()
+    if ftype == TType.STOP then
+      break
+    elseif fid == 1 then
+      if ftype == TType.STRING then
+        self.table = iprot:readString()
+      else
+        iprot:skip(ftype)
+      end
+    elseif fid == 2 then
+      if ftype == TType.LIST then
+        self.deletes = {}
+        local _etype123, _size120 = iprot:readListBegin()
+        for _i=1,_size120 do
+          local _elem124 = TDelete:new{}
+          _elem124:read(iprot)
+          table.insert(self.deletes, _elem124)
+        end
+        iprot:readListEnd()
+      else
+        iprot:skip(ftype)
+      end
+    else
+      iprot:skip(ftype)
+    end
+    iprot:readFieldEnd()
+  end
+  iprot:readStructEnd()
+end
+
+function deleteMultiple_args:write(oprot)
+  oprot:writeStructBegin('deleteMultiple_args')
+  if self.table ~= nil then
+    oprot:writeFieldBegin('table', TType.STRING, 1)
+    oprot:writeString(self.table)
+    oprot:writeFieldEnd()
+  end
+  if self.deletes ~= nil then
+    oprot:writeFieldBegin('deletes', TType.LIST, 2)
+    oprot:writeListBegin(TType.STRUCT, #self.deletes)
+    for _,iter125 in ipairs(self.deletes) do
+      iter125:write(oprot)
+    end
+    oprot:writeListEnd()
+    oprot:writeFieldEnd()
+  end
+  oprot:writeFieldStop()
+  oprot:writeStructEnd()
+end
+
+local deleteMultiple_result = __TObject:new{
+  success = nil,
+  io = nil
+}
+
+function deleteMultiple_result:read(iprot)
+  iprot:readStructBegin()
+  while true do
+    local fname, ftype, fid = iprot:readFieldBegin()
+    if ftype == TType.STOP then
+      break
+    elseif fid == 0 then
+      if ftype == TType.LIST then
+        self.success = {}
+        local _etype129, _size126 = iprot:readListBegin()
+        for _i=1,_size126 do
+          local _elem130 = TDelete:new{}
+          _elem130:read(iprot)
+          table.insert(self.success, _elem130)
+        end
+        iprot:readListEnd()
+      else
+        iprot:skip(ftype)
+      end
+    elseif fid == 1 then
+      if ftype == TType.STRUCT then
+        self.io = TIOError:new{}
+        self.io:read(iprot)
+      else
+        iprot:skip(ftype)
+      end
+    else
+      iprot:skip(ftype)
+    end
+    iprot:readFieldEnd()
+  end
+  iprot:readStructEnd()
+end
+
+function deleteMultiple_result:write(oprot)
+  oprot:writeStructBegin('deleteMultiple_result')
+  if self.success ~= nil then
+    oprot:writeFieldBegin('success', TType.LIST, 0)
+    oprot:writeListBegin(TType.STRUCT, #self.success)
+    for _,iter131 in ipairs(self.success) do
+      iter131:write(oprot)
+    end
+    oprot:writeListEnd()
+    oprot:writeFieldEnd()
+  end
+  if self.io ~= nil then
+    oprot:writeFieldBegin('io', TType.STRUCT, 1)
+    self.io:write(oprot)
+    oprot:writeFieldEnd()
+  end
+  oprot:writeFieldStop()
+  oprot:writeStructEnd()
+end
+
+local checkAndDelete_args = __TObject:new{
+  table = nil,
+  row = nil,
+  family = nil ,
+  qualifier = nil ,
+  value = nil,
+  deleteSingle = nil
+}
+
+function checkAndDelete_args:read(iprot)
+  iprot:readStructBegin()
+  while true do
+    local fname, ftype, fid = iprot:readFieldBegin()
+    if ftype == TType.STOP then
+      break
+    elseif fid == 1 then
+      if ftype == TType.STRING then
+        self.table = iprot:readString()
+      else
+        iprot:skip(ftype)
+      end
+    elseif fid == 2 then
+      if ftype == TType.STRING then
+        self.row = iprot:readString()
+      else
+        iprot:skip(ftype)
+      end
+    elseif fid == 3 then
+      if ftype == TType.STRING then
+        self.family = iprot:readString()
+      else
+        iprot:skip(ftype)
+      end
+    elseif fid == 4 then
+      if ftype == TType.STRING then
+        self.qualifier = iprot:readString()
+      else
+        iprot:skip(ftype)
+      end
+    elseif fid == 5 then
+      if ftype == TType.STRING then
+        self.value = iprot:readString()
+      else
+        iprot:skip(ftype)
+      end
+    elseif fid == 6 then
+      if ftype == TType.STRUCT then
+        self.deleteSingle = TDelete:new{}
+        self.deleteSingle:read(iprot)
+      else
+        iprot:skip(ftype)
+      end
+    else
+      iprot:skip(ftype)
+    end
+    iprot:readFieldEnd()
+  end
+  iprot:readStructEnd()
+end
+
+function checkAndDelete_args:write(oprot)
+  oprot:writeStructBegin('checkAndDelete_args')
+  if self.table ~= nil then
+    oprot:writeFieldBegin('table', TType.STRING, 1)
+    oprot:writeString(self.table)
+    oprot:writeFieldEnd()
+  end
+  if self.row ~= nil then
+    oprot:writeFieldBegin('row', TType.STRING, 2)
+    oprot:writeString(self.row)
+    oprot:writeFieldEnd()
+  end
+  if self.family ~= nil then
+    oprot:writeFieldBegin('family', TType.STRING, 3)
+    oprot:writeString(self.family)
+    oprot:writeFieldEnd()
+  end
+  if self.qualifier ~= nil then
+    oprot:writeFieldBegin('qualifier', TType.STRING, 4)
+    oprot:writeString(self.qualifier)
+    oprot:writeFieldEnd()
+  end
+  if self.value ~= nil then
+    oprot:writeFieldBegin('value', TType.STRING, 5)
+    oprot:writeString(self.value)
+    oprot:writeFieldEnd()
+  end
+  if self.deleteSingle ~= nil then
+    oprot:writeFieldBegin('deleteSingle', TType.STRUCT, 6)
+    self.deleteSingle:write(oprot)
+    oprot:writeFieldEnd()
+  end
+  oprot:writeFieldStop()
+  oprot:writeStructEnd()
+end
+
+local checkAndDelete_result = __TObject:new{
+  success = nil,
+  io = nil
+}
+
+function checkAndDelete_result:read(iprot)
+  iprot:readStructBegin()
+  while true do
+    local fname, ftype, fid = iprot:readFieldBegin()
+    if ftype == TType.STOP then
+      break
+    elseif fid == 0 then
+      if ftype == TType.BOOL then
+        self.success = iprot:readBool()
+      else
+        iprot:skip(ftype)
+      end
+    elseif fid == 1 then
+      if ftype == TType.STRUCT then
+        self.io = TIOError:new{}
+        self.io:read(iprot)
+      else
+        iprot:skip(ftype)
+      end
+    else
+      iprot:skip(ftype)
+    end
+    iprot:readFieldEnd()
+  end
+  iprot:readStructEnd()
+end
+
+function checkAndDelete_result:write(oprot)
+  oprot:writeStructBegin('checkAndDelete_result')
+  if self.success ~= nil then
+    oprot:writeFieldBegin('success', TType.BOOL, 0)
+    oprot:writeBool(self.success)
+    oprot:writeFieldEnd()
+  end
+  if self.io ~= nil then
+    oprot:writeFieldBegin('io', TType.STRUCT, 1)
+    self.io:write(oprot)
+    oprot:writeFieldEnd()
+  end
+  oprot:writeFieldStop()
+  oprot:writeStructEnd()
+end
+
+local increment_args = __TObject:new{
+  table = nil,
+  increment = nil
+}
+
+function increment_args:read(iprot)
+  iprot:readStructBegin()
+  while true do
+    local fname, ftype, fid = iprot:readFieldBegin()
+    if ftype == TType.STOP then
+      break
+    elseif fid == 1 then
+      if ftype == TType.STRING then
+        self.table = iprot:readString()
+      else
+        iprot:skip(ftype)
+      end
+    elseif fid == 2 then
+      if ftype == TType.STRUCT then
+        self.increment = TIncrement:new{}
+        self.increment:read(iprot)
+      else
+        iprot:skip(ftype)
+      end
+    else
+      iprot:skip(ftype)
+    end
+    iprot:readFieldEnd()
+  end
+  iprot:readStructEnd()
+end
+
+function increment_args:write(oprot)
+  oprot:writeStructBegin('increment_args')
+  if self.table ~= nil then
+    oprot:writeFieldBegin('table', TType.STRING, 1)
+    oprot:writeString(self.table)
+    oprot:writeFieldEnd()
+  end
+  if self.increment ~= nil then
+    oprot:writeFieldBegin('increment', TType.STRUCT, 2)
+    self.increment:write(oprot)
+    oprot:writeFieldEnd()
+  end
+  oprot:writeFieldStop()
+  oprot:writeStructEnd()
+end
+
+local increment_result = __TObject:new{
+  success = nil,
+  io = nil
+}
+
+function increment_result:read(iprot)
+  iprot:readStructBegin()
+  while true do
+    local fname, ftype, fid = iprot:readFieldBegin()
+    if ftype == TType.STOP then
+      break
+    elseif fid == 0 then
+      if ftype == TType.STRUCT then
+        self.success = TResult:new{}
+        self.success:read(iprot)
+      else
+        iprot:skip(ftype)
+      end
+    elseif fid == 1 then
+      if ftype == TType.STRUCT then
+        self.io = TIOError:new{}
+        self.io:read(iprot)
+      else
+        iprot:skip(ftype)
+      end
+    else
+      iprot:skip(ftype)
+    end
+    iprot:readFieldEnd()
+  end
+  iprot:readStructEnd()
+end
+
+function increment_result:write(oprot)
+  oprot:writeStructBegin('increment_result')
+  if self.success ~= nil then
+    oprot:writeFieldBegin('success', TType.STRUCT, 0)
+    self.success:write(oprot)
+    oprot:writeFieldEnd()
+  end
+  if self.io ~= nil then
+    oprot:writeFieldBegin('io', TType.STRUCT, 1)
+    self.io:write(oprot)
+    oprot:writeFieldEnd()
+  end
+  oprot:writeFieldStop()
+  oprot:writeStructEnd()
+end
+
+local append_args = __TObject:new{
+  table = nil,
+  append = nil
+}
+
+function append_args:read(iprot)
+  iprot:readStructBegin()
+  while true do
+    local fname, ftype, fid = iprot:readFieldBegin()
+    if ftype == TType.STOP then
+      break
+    elseif fid == 1 then
+      if ftype == TType.STRING then
+        self.table = iprot:readString()
+      else
+        iprot:skip(ftype)
+      end
+    elseif fid == 2 then
+      if ftype == TType.STRUCT then
+        self.append = TAppend:new{}
+        self.append:read(iprot)
+      else
+        iprot:skip(ftype)
+      end
+    else
+      iprot:skip(ftype)
+    end
+    iprot:readFieldEnd()
+  end
+  iprot:readStructEnd()
+end
+
+function append_args:write(oprot)
+  oprot:writeStructBegin('append_args')
+  if self.table ~= nil then
+    oprot:writeFieldBegin('table', TType.STRING, 1)
+    oprot:writeString(self.table)
+    oprot:writeFieldEnd()
+  end
+  if self.append ~= nil then
+    oprot:writeFieldBegin('append', TType.STRUCT, 2)
+    self.append:write(oprot)
+    oprot:writeFieldEnd()
+  end
+  oprot:writeFieldStop()
+  oprot:writeStructEnd()
+end
+
+local append_result = __TObject:new{
+  success = nil,
+  io = nil
+}
+
+function append_result:read(iprot)
+  iprot:readStructBegin()
+  while true do
+    local fname, ftype, fid = iprot:readFieldBegin()
+    if ftype == TType.STOP then
+      break
+    elseif fid == 0 then
+      if ftype == TType.STRUCT then
+        self.success = TResult:new{}
+        self.success:read(iprot)
+      else
+        iprot:skip(ftype)
+      end
+    elseif fid == 1 then
+      if ftype == TType.STRUCT then
+        self.io = TIOError:new{}
+        self.io:read(iprot)
+      else
+        iprot:skip(ftype)
+      end
+    else
+      iprot:skip(ftype)
+    end
+    iprot:readFieldEnd()
+  end
+  iprot:readStructEnd()
+end
+
+function append_result:write(oprot)
+  oprot:writeStructBegin('append_result')
+  if self.success ~= nil then
+    oprot:writeFieldBegin('success', TType.STRUCT, 0)
+    self.success:write(oprot)
+    oprot:writeFieldEnd()
+  end
+  if self.io ~= nil then
+    oprot:writeFieldBegin('io', TType.STRUCT, 1)
+    self.io:write(oprot)
+    oprot:writeFieldEnd()
+  end
+  oprot:writeFieldStop()
+  oprot:writeStructEnd()
+end
+
+local openScanner_args = __TObject:new{
+  table = nil ,
+  scan = nil
+}
+
+function openScanner_args:read(iprot)
+  iprot:readStructBegin()
+  while true do
+    local fname, ftype, fid = iprot:readFieldBegin()
+    if ftype == TType.STOP then
+      break
+    elseif fid == 1 then
+      if ftype == TType.STRING then
+        self.table = iprot:readString()
+      else
+        iprot:skip(ftype)
+      end
+    elseif fid == 2 then
+      if ftype == TType.STRUCT then
+        self.scan = TScan:new{}
+        self.scan:read(iprot)
+      else
+        iprot:skip(ftype)
+      end
+    else
+      iprot:skip(ftype)
+    end
+    iprot:readFieldEnd()
+  end
+  iprot:readStructEnd()
+end
+
+function openScanner_args:write(oprot)
+  oprot:writeStructBegin('openScanner_args')
+  if self.table ~= nil then
+    oprot:writeFieldBegin('table', TType.STRING, 1)
+    oprot:writeString(self.table)
+    oprot:writeFieldEnd()
+  end
+  if self.scan ~= nil then
+    oprot:writeFieldBegin('scan', TType.STRUCT, 2)
+    self.scan:write(oprot)
+    oprot:writeFieldEnd()
+  end
+  oprot:writeFieldStop()
+  oprot:writeStructEnd()
+end
+
+local openScanner_result = __TObject:new{
+  success = nil,
+  io = nil
+}
+
+function openScanner_result:read(iprot)
+  iprot:readStructBegin()
+  while true do
+    local fname, ftype, fid = iprot:readFieldBegin()
+    if ftype == TType.STOP then
+      break
+    elseif fid == 0 then
+      if ftype == TType.I32 then
+        self.success = iprot:readI32()
+      else
+        iprot:skip(ftype)
+      end
+    elseif fid == 1 then
+      if ftype == TType.STRUCT then
+        self.io = TIOError:new{}
+        self.io:read(iprot)
+      else
+        iprot:skip(ftype)
+      end
+    else
+      iprot:skip(ftype)
+    end
+    iprot:readFieldEnd()
+  end
+  iprot:readStructEnd()
+end
+
+function openScanner_result:write(oprot)
+  oprot:writeStructBegin('openScanner_result')
+  if self.success ~= nil then
+    oprot:writeFieldBegin('success', TType.I32, 0)
+    oprot:writeI32(self.success)
+    oprot:writeFieldEnd()
+  end
+  if self.io ~= nil then
+    oprot:writeFieldBegin('io', TType.STRUCT, 1)
+    self.io:write(oprot)
+    oprot:writeFieldEnd()
+  end
+  oprot:writeFieldStop()
+  oprot:writeStructEnd()
+end
+
+local getScannerRows_args = __TObject:new{
+  scannerId = nil,
+  numRows = nil
+}
+
+function getScannerRows_args:read(iprot)
+  iprot:readStructBegin()
+  while true do
+    local fname, ftype, fid = iprot:readFieldBegin()
+    if ftype == TType.STOP then
+      break
+    elseif fid == 1 then
+      if ftype == TType.I32 then
+        self.scannerId = iprot:readI32()
+      else
+        iprot:skip(ftype)
+      end
+    elseif fid == 2 then
+      if ftype == TType.I32 then
+        self.numRows = iprot:readI32()
+      else
+        iprot:skip(ftype)
+      end
+    else
+      iprot:skip(ftype)
+    end
+    iprot:readFieldEnd()
+  end
+  iprot:readStructEnd()
+end
+
+function getScannerRows_args:write(oprot)
+  oprot:writeStructBegin('getScannerRows_args')
+  if self.scannerId ~= nil then
+    oprot:writeFieldBegin('scannerId', TType.I32, 1)
+    oprot:writeI32(self.scannerId)
+    oprot:writeFieldEnd()
+  end
+  if self.numRows ~= nil then
+    oprot:writeFieldBegin('numRows', TType.I32, 2)
+    oprot:writeI32(self.numRows)
+    oprot:writeFieldEnd()
+  end
+  oprot:writeFieldStop()
+  oprot:writeStructEnd()
+end
+
+local getScannerRows_result = __TObject:new{
+  success = nil,
+  io = nil,
+  ia = nil
+}
+
+function getScannerRows_result:read(iprot)
+  iprot:readStructBegin()
+  while true do
+    local fname, ftype, fid = iprot:readFieldBegin()
+    if ftype == TType.STOP then
+      break
+    elseif fid == 0 then
+      if ftype == TType.LIST then
+        self.success = {}
+        local _etype135, _size132 = iprot:readListBegin()
+        for _i=1,_size132 do
+          local _elem136 = TResult:new{}
+          _elem136:read(iprot)
+          table.insert(self.success, _elem136)
+        end
+        iprot:readListEnd()
+      else
+        iprot:skip(ftype)
+      end
+    elseif fid == 1 then
+      if ftype == TType.STRUCT then
+        self.io = TIOError:new{}
+        self.io:read(iprot)
+      else
+        iprot:skip(ftype)
+      end
+    elseif fid == 2 then
+      if ftype == TType.STRUCT then
+        self.ia = TIllegalArgument:new{}
+        self.ia:read(iprot)
+      else
+        iprot:skip(ftype)
+      end
+    else
+      iprot:skip(ftype)
+    end
+    iprot:readFieldEnd()
+  end
+  iprot:readStructEnd()
+end
+
+function getScannerRows_result:write(oprot)
+  oprot:writeStructBegin('getScannerRows_result')
+  if self.success ~= nil then
+    oprot:writeFieldBegin('success', TType.LIST, 0)
+    oprot:writeListBegin(TType.STRUCT, #self.success)
+    for _,iter137 in ipairs(self.success) do
+      iter137:write(oprot)
+    end
+    oprot:writeListEnd()
+    oprot:writeFieldEnd()
+  end
+  if self.io ~= nil then
+    oprot:writeFieldBegin('io', TType.STRUCT, 1)
+    self.io:write(oprot)
+    oprot:writeFieldEnd()
+  end
+  if self.ia ~= nil then
+    oprot:writeFieldBegin('ia', TType.STRUCT, 2)
+    self.ia:write(oprot)
+    oprot:writeFieldEnd()
+  end
+  oprot:writeFieldStop()
+  oprot:writeStructEnd()
+end
+
+local closeScanner_args = __TObject:new{
+  scannerId = nil
+}
+
+function closeScanner_args:read(iprot)
+  iprot:readStructBegin()
+  while true do
+    local fname, ftype, fid = iprot:readFieldBegin()
+    if ftype == TType.STOP then
+      break
+    elseif fid == 1 then
+      if ftype == TType.I32 then
+        self.scannerId = iprot:readI32()
+      else
+        iprot:skip(ftype)
+      end
+    else
+      iprot:skip(ftype)
+    end
+    iprot:readFieldEnd()
+  end
+  iprot:readStructEnd()
+end
+
+function closeScanner_args:write(oprot)
+  oprot:writeStructBegin('closeScanner_args')
+  if self.scannerId ~= nil then
+    oprot:writeFieldBegin('scannerId', TType.I32, 1)
+    oprot:writeI32(self.scannerId)
+    oprot:writeFieldEnd()
+  end
+  oprot:writeFieldStop()
+  oprot:writeStructEnd()
+end
+
+local closeScanner_result = __TObject:new{
+  io = nil,
+  ia = nil
+}
+
+function closeScanner_result:read(iprot)
+  iprot:readStructBegin()
+  while true do
+    local fname, ftype, fid = iprot:readFieldBegin()
+    if ftype == TType.STOP then
+      break
+    elseif fid == 1 then
+      if ftype == TType.STRUCT then
+        self.io = TIOError:new{}
+        self.io:read(iprot)
+      else
+        iprot:skip(ftype)
+      end
+    elseif fid == 2 then
+      if ftype == TType.STRUCT then
+        self.ia = TIllegalArgument:new{}
+        self.ia:read(iprot)
+      else
+        iprot:skip(ftype)
+      end
+    else
+      iprot:skip(ftype)
+    end
+    iprot:readFieldEnd()
+  end
+  iprot:readStructEnd()
+end
+
+function closeScanner_result:write(oprot)
+  oprot:writeStructBegin('closeScanner_result')
+  if self.io ~= nil then
+    oprot:writeFieldBegin('io', TType.STRUCT, 1)
+    self.io:write(oprot)
+    oprot:writeFieldEnd()
+  end
+  if self.ia ~= nil then
+    oprot:writeFieldBegin('ia', TType.STRUCT, 2)
+    self.ia:write(oprot)
+    oprot:writeFieldEnd()
+  end
+  oprot:writeFieldStop()
+  oprot:writeStructEnd()
+end
+
+local mutateRow_args = __TObject:new{
+  table = nil,
+  rowMutations = nil
+}
+
+function mutateRow_args:read(iprot)
+  iprot:readStructBegin()
+  while true do
+    local fname, ftype, fid = iprot:readFieldBegin()
+    if ftype == TType.STOP then
+      break
+    elseif fid == 1 then
+      if ftype == TType.STRING then
+        self.table = iprot:readString()
+      else
+        iprot:skip(ftype)
+      end
+    elseif fid == 2 then
+      if ftype == TType.STRUCT then
+        self.rowMutations = TRowMutations:new{}
+        self.rowMutations:read(iprot)
+      else
+        iprot:skip(ftype)
+      end
+    else
+      iprot:skip(ftype)
+    end
+    iprot:readFieldEnd()
+  end
+  iprot:readStructEnd()
+end
+
+function mutateRow_args:write(oprot)
+  oprot:writeStructBegin('mutateRow_args')
+  if self.table ~= nil then
+    oprot:writeFieldBegin('table', TType.STRING, 1)
+    oprot:writeString(self.table)
+    oprot:writeFieldEnd()
+  end
+  if self.rowMutations ~= nil then
+    oprot:writeFieldBegin('rowMutations', TType.STRUCT, 2)
+    self.rowMutations:write(oprot)
+    oprot:writeFieldEnd()
+  end
+  oprot:writeFieldStop()
+  oprot:writeStructEnd()
+end
+
+local mutateRow_result = __TObject:new{
+  io = nil
+}
+
+function mutateRow_result:read(iprot)
+  iprot:readStructBegin()
+  while true do
+    local fname, ftype, fid = iprot:readFieldBegin()
+    if ftype == TType.STOP then
+      break
+    elseif fid == 1 then
+      if ftype == TType.STRUCT then
+        self.io = TIOError:new{}
+        self.io:read(iprot)
+      else
+        iprot:skip(ftype)
+      end
+    else
+      iprot:skip(ftype)
+    end
+    iprot:readFieldEnd()
+  end
+  iprot:readStructEnd()
+end
+
+function mutateRow_result:write(oprot)
+  oprot:writeStructBegin('mutateRow_result')
+  if self.io ~= nil then
+    oprot:writeFieldBegin('io', TType.STRUCT, 1)
+    self.io:write(oprot)
+    oprot:writeFieldEnd()
+  end
+  oprot:writeFieldStop()
+  oprot:writeStructEnd()
+end
+
+local getScannerResults_args = __TObject:new{
+  table = nil,
+  scan = nil ,
+  numRows = nil
+}
+
+function getScannerResults_args:read(iprot)
+  iprot:readStructBegin()
+  while true do
+    local fname, ftype, fid = iprot:readFieldBegin()
+    if ftype == TType.STOP then
+      break
+    elseif fid == 1 then
+      if ftype == TType.STRING then
+        self.table = iprot:readString()
+      else
+        iprot:skip(ftype)
+      end
+    elseif fid == 2 then
+      if ftype == TType.STRUCT then
+        self.scan = TScan:new{}
+        self.scan:read(iprot)
+      else
+        iprot:skip(ftype)
+      end
+    elseif fid == 3 then
+      if ftype == TType.I32 then
+        self.numRows = iprot:readI32()
+      else
+        iprot:skip(ftype)
+      end
+    else
+      iprot:skip(ftype)
+    end
+    iprot:readFieldEnd()
+  end
+  iprot:readStructEnd()
+end
+
+function getScannerResults_args:write(oprot)
+  oprot:writeStructBegin('getScannerResults_args')
+  if self.table ~= nil then
+    oprot:writeFieldBegin('table', TType.STRING, 1)
+    oprot:writeString(self.table)
+    oprot:writeFieldEnd()
+  end
+  if self.scan ~= nil then
+    oprot:writeFieldBegin('scan', TType.STRUCT, 2)
+    self.scan:write(oprot)
+    oprot:writeFieldEnd()
+  end
+  if self.numRows ~= nil then
+    oprot:writeFieldBegin('numRows', TType.I32, 3)
+    oprot:writeI32(self.numRows)
+    oprot:writeFieldEnd()
+  end
+  oprot:writeFieldStop()
+  oprot:writeStructEnd()
+end
+
+local getScannerResults_result = __TObject:new{
+  success = nil,
+  io = nil
+}
+
+function getScannerResults_result:read(iprot)
+  iprot:readStructBegin()
+  while true do
+    local fname, ftype, fid = iprot:readFieldBegin()
+    if ftype == TType.STOP then
+      break
+    elseif fid == 0 then
+      if ftype == TType.LIST then
+        self.success = {}
+        local _etype141, _size138 = iprot:readListBegin()
+        for _i=1,_size138 do
+          local _elem142 = TResult:new{}
+          _elem142:read(iprot)
+          table.insert(self.success, _elem142)
+        end
+        iprot:readListEnd()
+      else
+        iprot:skip(ftype)
+      end
+    elseif fid == 1 then
+      if ftype == TType.STRUCT then
+        self.io = TIOError:new{}
+        self.io:read(iprot)
+      else
+        iprot:skip(ftype)
+      end
+    else
+      iprot:skip(ftype)
+    end
+    iprot:readFieldEnd()
+  end
+  iprot:readStructEnd()
+end
+
+function getScannerResults_result:write(oprot)
+  oprot:writeStructBegin('getScannerResults_result')
+  if self.success ~= nil then
+    oprot:writeFieldBegin('success', TType.LIST, 0)
+    oprot:writeListBegin(TType.STRUCT, #self.success)
+    for _,iter143 in ipairs(self.success) do
+      iter143:write(oprot)
+    end
+    oprot:writeListEnd()
+    oprot:writeFieldEnd()
+  end
+  if self.io ~= nil then
+    oprot:writeFieldBegin('io', TType.STRUCT, 1)
+    self.io:write(oprot)
+    oprot:writeFieldEnd()
+  end
+  oprot:writeFieldStop()
+  oprot:writeStructEnd()
+end
+
+local THBaseServiceClient = __TObject.new(__TClient, {
   __type = 'THBaseServiceClient'
 })
 
@@ -536,12 +2243,12 @@ function THBaseServiceClient:recv_getScannerResults(table, scan, numRows)
   end
   error(TApplicationException:new{errorCode = TApplicationException.MISSING_RESULT})
 end
-THBaseServiceIface = __TObject:new{
+local THBaseServiceIface = __TObject:new{
   __type = 'THBaseServiceIface'
 }
 
 
-THBaseServiceProcessor = __TObject.new(__TProcessor
+local THBaseServiceProcessor = __TObject.new(__TProcessor
 , {
  __type = 'THBaseServiceProcessor'
 })
@@ -552,7 +2259,7 @@ function THBaseServiceProcessor:process(iprot, oprot, server_ctx)
   if not self[func_name] or ttype(self[func_name]) ~= 'function' then
     iprot:skip(TType.STRUCT)
     iprot:readMessageEnd()
-    x = TApplicationException:new{
+    local x = TApplicationException:new{
       errorCode = TApplicationException.UNKNOWN_METHOD
     }
     oprot:writeMessageBegin(name, TMessageType.EXCEPTION, seqid)
@@ -565,7 +2272,7 @@ function THBaseServiceProcessor:process(iprot, oprot, server_ctx)
 end
 
 function THBaseServiceProcessor:process_exists(seqid, iprot, oprot, server_ctx)
-  local args = exists_args:new{}
+  local args =exists_args:new{}
   local reply_type = TMessageType.REPLY
   args:read(iprot)
   iprot:readMessageEnd()
@@ -904,1677 +2611,40 @@ function THBaseServiceProcessor:process_getScannerResults(seqid, iprot, oprot, s
   oprot.trans:flush()
 end
 
--- HELPER FUNCTIONS AND STRUCTURES
-
-exists_args = __TObject:new{
-  table,
-  get
+local _M = {
+append_args = append_args,
+append_result =append_result,
+checkAndDelete_args = checkAndDelete_args,
+checkAndDelete_result = checkAndDelete_result,
+checkAndPut_args = checkAndPut_args,
+checkAndPut_result = checkAndPut_result,
+closeScanner_args = closeScanner_args,
+closeScanner_result = closeScanner_result,
+deleteMultiple_args = deleteMultiple_args,
+deleteMultiple_result = deleteMultiple_result,
+deleteSingle_args = deleteSingle_args,
+deleteSingle_result = deleteSingle_result,
+exists_args = exists_args,
+exists_result = exists_result,
+get_args = get_args,
+getMultiple_args = getMultiple_args,
+getMultiple_result = getMultiple_result,
+get_result = get_result,
+getScannerResults_args = getScannerResults_args,
+getScannerResults_result = getScannerResults_result,
+getScannerRows_args = getScannerRows_args,
+getScannerRows_result = getScannerRows_result,
+increment_args = increment_args,
+increment_result = increment_result,
+mutateRow_args = mutateRow_args,
+mutateRow_result = mutateRow_result,
+openScanner_args = openScanner_args,
+openScanner_result = openScanner_result,
+put_args = put_args,
+putMultiple_args = putMultiple_args,
+putMultiple_result = putMultiple_result,
+put_result = put_result,
+THBaseServiceClient = THBaseServiceClient,
+THBaseServiceProcessor = THBaseServiceProcessor
 }
-
-function exists_args:read(iprot)
-  iprot:readStructBegin()
-  while true do
-    local fname, ftype, fid = iprot:readFieldBegin()
-    if ftype == TType.STOP then
-      break
-    elseif fid == 1 then
-      if ftype == TType.STRING then
-        self.table = iprot:readString()
-      else
-        iprot:skip(ftype)
-      end
-    elseif fid == 2 then
-      if ftype == TType.STRUCT then
-        self.get = TGet:new{}
-        self.get:read(iprot)
-      else
-        iprot:skip(ftype)
-      end
-    else
-      iprot:skip(ftype)
-    end
-    iprot:readFieldEnd()
-  end
-  iprot:readStructEnd()
-end
-
-function exists_args:write(oprot)
-  oprot:writeStructBegin('exists_args')
-  if self.table ~= nil then
-    oprot:writeFieldBegin('table', TType.STRING, 1)
-    oprot:writeString(self.table)
-    oprot:writeFieldEnd()
-  end
-  if self.get ~= nil then
-    oprot:writeFieldBegin('get', TType.STRUCT, 2)
-    self.get:write(oprot)
-    oprot:writeFieldEnd()
-  end
-  oprot:writeFieldStop()
-  oprot:writeStructEnd()
-end
-
-exists_result = __TObject:new{
-  success,
-  io
-}
-
-function exists_result:read(iprot)
-  iprot:readStructBegin()
-  while true do
-    local fname, ftype, fid = iprot:readFieldBegin()
-    if ftype == TType.STOP then
-      break
-    elseif fid == 0 then
-      if ftype == TType.BOOL then
-        self.success = iprot:readBool()
-      else
-        iprot:skip(ftype)
-      end
-    elseif fid == 1 then
-      if ftype == TType.STRUCT then
-        self.io = TIOError:new{}
-        self.io:read(iprot)
-      else
-        iprot:skip(ftype)
-      end
-    else
-      iprot:skip(ftype)
-    end
-    iprot:readFieldEnd()
-  end
-  iprot:readStructEnd()
-end
-
-function exists_result:write(oprot)
-  oprot:writeStructBegin('exists_result')
-  if self.success ~= nil then
-    oprot:writeFieldBegin('success', TType.BOOL, 0)
-    oprot:writeBool(self.success)
-    oprot:writeFieldEnd()
-  end
-  if self.io ~= nil then
-    oprot:writeFieldBegin('io', TType.STRUCT, 1)
-    self.io:write(oprot)
-    oprot:writeFieldEnd()
-  end
-  oprot:writeFieldStop()
-  oprot:writeStructEnd()
-end
-
-get_args = __TObject:new{
-  table,
-  get
-}
-
-function get_args:read(iprot)
-  iprot:readStructBegin()
-  while true do
-    local fname, ftype, fid = iprot:readFieldBegin()
-    if ftype == TType.STOP then
-      break
-    elseif fid == 1 then
-      if ftype == TType.STRING then
-        self.table = iprot:readString()
-      else
-        iprot:skip(ftype)
-      end
-    elseif fid == 2 then
-      if ftype == TType.STRUCT then
-        self.get = TGet:new{}
-        self.get:read(iprot)
-      else
-        iprot:skip(ftype)
-      end
-    else
-      iprot:skip(ftype)
-    end
-    iprot:readFieldEnd()
-  end
-  iprot:readStructEnd()
-end
-
-function get_args:write(oprot)
-  oprot:writeStructBegin('get_args')
-  if self.table ~= nil then
-    oprot:writeFieldBegin('table', TType.STRING, 1)
-    oprot:writeString(self.table)
-    oprot:writeFieldEnd()
-  end
-  if self.get ~= nil then
-    oprot:writeFieldBegin('get', TType.STRUCT, 2)
-    self.get:write(oprot)
-    oprot:writeFieldEnd()
-  end
-  oprot:writeFieldStop()
-  oprot:writeStructEnd()
-end
-
-get_result = __TObject:new{
-  success,
-  io
-}
-
-function get_result:read(iprot)
-  iprot:readStructBegin()
-  while true do
-    local fname, ftype, fid = iprot:readFieldBegin()
-    if ftype == TType.STOP then
-      break
-    elseif fid == 0 then
-      if ftype == TType.STRUCT then
-        self.success = TResult:new{}
-        self.success:read(iprot)
-      else
-        iprot:skip(ftype)
-      end
-    elseif fid == 1 then
-      if ftype == TType.STRUCT then
-        self.io = TIOError:new{}
-        self.io:read(iprot)
-      else
-        iprot:skip(ftype)
-      end
-    else
-      iprot:skip(ftype)
-    end
-    iprot:readFieldEnd()
-  end
-  iprot:readStructEnd()
-end
-
-function get_result:write(oprot)
-  oprot:writeStructBegin('get_result')
-  if self.success ~= nil then
-    oprot:writeFieldBegin('success', TType.STRUCT, 0)
-    self.success:write(oprot)
-    oprot:writeFieldEnd()
-  end
-  if self.io ~= nil then
-    oprot:writeFieldBegin('io', TType.STRUCT, 1)
-    self.io:write(oprot)
-    oprot:writeFieldEnd()
-  end
-  oprot:writeFieldStop()
-  oprot:writeStructEnd()
-end
-
-getMultiple_args = __TObject:new{
-  table,
-  gets
-}
-
-function getMultiple_args:read(iprot)
-  iprot:readStructBegin()
-  while true do
-    local fname, ftype, fid = iprot:readFieldBegin()
-    if ftype == TType.STOP then
-      break
-    elseif fid == 1 then
-      if ftype == TType.STRING then
-        self.table = iprot:readString()
-      else
-        iprot:skip(ftype)
-      end
-    elseif fid == 2 then
-      if ftype == TType.LIST then
-        self.gets = {}
-        local _etype105, _size102 = iprot:readListBegin()
-        for _i=1,_size102 do
-          local _elem106 = TGet:new{}
-          _elem106:read(iprot)
-          table.insert(self.gets, _elem106)
-        end
-        iprot:readListEnd()
-      else
-        iprot:skip(ftype)
-      end
-    else
-      iprot:skip(ftype)
-    end
-    iprot:readFieldEnd()
-  end
-  iprot:readStructEnd()
-end
-
-function getMultiple_args:write(oprot)
-  oprot:writeStructBegin('getMultiple_args')
-  if self.table ~= nil then
-    oprot:writeFieldBegin('table', TType.STRING, 1)
-    oprot:writeString(self.table)
-    oprot:writeFieldEnd()
-  end
-  if self.gets ~= nil then
-    oprot:writeFieldBegin('gets', TType.LIST, 2)
-    oprot:writeListBegin(TType.STRUCT, #self.gets)
-    for _,iter107 in ipairs(self.gets) do
-      iter107:write(oprot)
-    end
-    oprot:writeListEnd()
-    oprot:writeFieldEnd()
-  end
-  oprot:writeFieldStop()
-  oprot:writeStructEnd()
-end
-
-getMultiple_result = __TObject:new{
-  success,
-  io
-}
-
-function getMultiple_result:read(iprot)
-  iprot:readStructBegin()
-  while true do
-    local fname, ftype, fid = iprot:readFieldBegin()
-    if ftype == TType.STOP then
-      break
-    elseif fid == 0 then
-      if ftype == TType.LIST then
-        self.success = {}
-        local _etype111, _size108 = iprot:readListBegin()
-        for _i=1,_size108 do
-          local _elem112 = TResult:new{}
-          _elem112:read(iprot)
-          table.insert(self.success, _elem112)
-        end
-        iprot:readListEnd()
-      else
-        iprot:skip(ftype)
-      end
-    elseif fid == 1 then
-      if ftype == TType.STRUCT then
-        self.io = TIOError:new{}
-        self.io:read(iprot)
-      else
-        iprot:skip(ftype)
-      end
-    else
-      iprot:skip(ftype)
-    end
-    iprot:readFieldEnd()
-  end
-  iprot:readStructEnd()
-end
-
-function getMultiple_result:write(oprot)
-  oprot:writeStructBegin('getMultiple_result')
-  if self.success ~= nil then
-    oprot:writeFieldBegin('success', TType.LIST, 0)
-    oprot:writeListBegin(TType.STRUCT, #self.success)
-    for _,iter113 in ipairs(self.success) do
-      iter113:write(oprot)
-    end
-    oprot:writeListEnd()
-    oprot:writeFieldEnd()
-  end
-  if self.io ~= nil then
-    oprot:writeFieldBegin('io', TType.STRUCT, 1)
-    self.io:write(oprot)
-    oprot:writeFieldEnd()
-  end
-  oprot:writeFieldStop()
-  oprot:writeStructEnd()
-end
-
-put_args = __TObject:new{
-  table,
-  put
-}
-
-function put_args:read(iprot)
-  iprot:readStructBegin()
-  while true do
-    local fname, ftype, fid = iprot:readFieldBegin()
-    if ftype == TType.STOP then
-      break
-    elseif fid == 1 then
-      if ftype == TType.STRING then
-        self.table = iprot:readString()
-      else
-        iprot:skip(ftype)
-      end
-    elseif fid == 2 then
-      if ftype == TType.STRUCT then
-        self.put = TPut:new{}
-        self.put:read(iprot)
-      else
-        iprot:skip(ftype)
-      end
-    else
-      iprot:skip(ftype)
-    end
-    iprot:readFieldEnd()
-  end
-  iprot:readStructEnd()
-end
-
-function put_args:write(oprot)
-  oprot:writeStructBegin('put_args')
-  if self.table ~= nil then
-    oprot:writeFieldBegin('table', TType.STRING, 1)
-    oprot:writeString(self.table)
-    oprot:writeFieldEnd()
-  end
-  if self.put ~= nil then
-    oprot:writeFieldBegin('put', TType.STRUCT, 2)
-    self.put:write(oprot)
-    oprot:writeFieldEnd()
-  end
-  oprot:writeFieldStop()
-  oprot:writeStructEnd()
-end
-
-put_result = __TObject:new{
-  io
-}
-
-function put_result:read(iprot)
-  iprot:readStructBegin()
-  while true do
-    local fname, ftype, fid = iprot:readFieldBegin()
-    if ftype == TType.STOP then
-      break
-    elseif fid == 1 then
-      if ftype == TType.STRUCT then
-        self.io = TIOError:new{}
-        self.io:read(iprot)
-      else
-        iprot:skip(ftype)
-      end
-    else
-      iprot:skip(ftype)
-    end
-    iprot:readFieldEnd()
-  end
-  iprot:readStructEnd()
-end
-
-function put_result:write(oprot)
-  oprot:writeStructBegin('put_result')
-  if self.io ~= nil then
-    oprot:writeFieldBegin('io', TType.STRUCT, 1)
-    self.io:write(oprot)
-    oprot:writeFieldEnd()
-  end
-  oprot:writeFieldStop()
-  oprot:writeStructEnd()
-end
-
-checkAndPut_args = __TObject:new{
-  table,
-  row,
-  family,
-  qualifier,
-  value,
-  put
-}
-
-function checkAndPut_args:read(iprot)
-  iprot:readStructBegin()
-  while true do
-    local fname, ftype, fid = iprot:readFieldBegin()
-    if ftype == TType.STOP then
-      break
-    elseif fid == 1 then
-      if ftype == TType.STRING then
-        self.table = iprot:readString()
-      else
-        iprot:skip(ftype)
-      end
-    elseif fid == 2 then
-      if ftype == TType.STRING then
-        self.row = iprot:readString()
-      else
-        iprot:skip(ftype)
-      end
-    elseif fid == 3 then
-      if ftype == TType.STRING then
-        self.family = iprot:readString()
-      else
-        iprot:skip(ftype)
-      end
-    elseif fid == 4 then
-      if ftype == TType.STRING then
-        self.qualifier = iprot:readString()
-      else
-        iprot:skip(ftype)
-      end
-    elseif fid == 5 then
-      if ftype == TType.STRING then
-        self.value = iprot:readString()
-      else
-        iprot:skip(ftype)
-      end
-    elseif fid == 6 then
-      if ftype == TType.STRUCT then
-        self.put = TPut:new{}
-        self.put:read(iprot)
-      else
-        iprot:skip(ftype)
-      end
-    else
-      iprot:skip(ftype)
-    end
-    iprot:readFieldEnd()
-  end
-  iprot:readStructEnd()
-end
-
-function checkAndPut_args:write(oprot)
-  oprot:writeStructBegin('checkAndPut_args')
-  if self.table ~= nil then
-    oprot:writeFieldBegin('table', TType.STRING, 1)
-    oprot:writeString(self.table)
-    oprot:writeFieldEnd()
-  end
-  if self.row ~= nil then
-    oprot:writeFieldBegin('row', TType.STRING, 2)
-    oprot:writeString(self.row)
-    oprot:writeFieldEnd()
-  end
-  if self.family ~= nil then
-    oprot:writeFieldBegin('family', TType.STRING, 3)
-    oprot:writeString(self.family)
-    oprot:writeFieldEnd()
-  end
-  if self.qualifier ~= nil then
-    oprot:writeFieldBegin('qualifier', TType.STRING, 4)
-    oprot:writeString(self.qualifier)
-    oprot:writeFieldEnd()
-  end
-  if self.value ~= nil then
-    oprot:writeFieldBegin('value', TType.STRING, 5)
-    oprot:writeString(self.value)
-    oprot:writeFieldEnd()
-  end
-  if self.put ~= nil then
-    oprot:writeFieldBegin('put', TType.STRUCT, 6)
-    self.put:write(oprot)
-    oprot:writeFieldEnd()
-  end
-  oprot:writeFieldStop()
-  oprot:writeStructEnd()
-end
-
-checkAndPut_result = __TObject:new{
-  success,
-  io
-}
-
-function checkAndPut_result:read(iprot)
-  iprot:readStructBegin()
-  while true do
-    local fname, ftype, fid = iprot:readFieldBegin()
-    if ftype == TType.STOP then
-      break
-    elseif fid == 0 then
-      if ftype == TType.BOOL then
-        self.success = iprot:readBool()
-      else
-        iprot:skip(ftype)
-      end
-    elseif fid == 1 then
-      if ftype == TType.STRUCT then
-        self.io = TIOError:new{}
-        self.io:read(iprot)
-      else
-        iprot:skip(ftype)
-      end
-    else
-      iprot:skip(ftype)
-    end
-    iprot:readFieldEnd()
-  end
-  iprot:readStructEnd()
-end
-
-function checkAndPut_result:write(oprot)
-  oprot:writeStructBegin('checkAndPut_result')
-  if self.success ~= nil then
-    oprot:writeFieldBegin('success', TType.BOOL, 0)
-    oprot:writeBool(self.success)
-    oprot:writeFieldEnd()
-  end
-  if self.io ~= nil then
-    oprot:writeFieldBegin('io', TType.STRUCT, 1)
-    self.io:write(oprot)
-    oprot:writeFieldEnd()
-  end
-  oprot:writeFieldStop()
-  oprot:writeStructEnd()
-end
-
-putMultiple_args = __TObject:new{
-  table,
-  puts
-}
-
-function putMultiple_args:read(iprot)
-  iprot:readStructBegin()
-  while true do
-    local fname, ftype, fid = iprot:readFieldBegin()
-    if ftype == TType.STOP then
-      break
-    elseif fid == 1 then
-      if ftype == TType.STRING then
-        self.table = iprot:readString()
-      else
-        iprot:skip(ftype)
-      end
-    elseif fid == 2 then
-      if ftype == TType.LIST then
-        self.puts = {}
-        local _etype117, _size114 = iprot:readListBegin()
-        for _i=1,_size114 do
-          local _elem118 = TPut:new{}
-          _elem118:read(iprot)
-          table.insert(self.puts, _elem118)
-        end
-        iprot:readListEnd()
-      else
-        iprot:skip(ftype)
-      end
-    else
-      iprot:skip(ftype)
-    end
-    iprot:readFieldEnd()
-  end
-  iprot:readStructEnd()
-end
-
-function putMultiple_args:write(oprot)
-  oprot:writeStructBegin('putMultiple_args')
-  if self.table ~= nil then
-    oprot:writeFieldBegin('table', TType.STRING, 1)
-    oprot:writeString(self.table)
-    oprot:writeFieldEnd()
-  end
-  if self.puts ~= nil then
-    oprot:writeFieldBegin('puts', TType.LIST, 2)
-    oprot:writeListBegin(TType.STRUCT, #self.puts)
-    for _,iter119 in ipairs(self.puts) do
-      iter119:write(oprot)
-    end
-    oprot:writeListEnd()
-    oprot:writeFieldEnd()
-  end
-  oprot:writeFieldStop()
-  oprot:writeStructEnd()
-end
-
-putMultiple_result = __TObject:new{
-  io
-}
-
-function putMultiple_result:read(iprot)
-  iprot:readStructBegin()
-  while true do
-    local fname, ftype, fid = iprot:readFieldBegin()
-    if ftype == TType.STOP then
-      break
-    elseif fid == 1 then
-      if ftype == TType.STRUCT then
-        self.io = TIOError:new{}
-        self.io:read(iprot)
-      else
-        iprot:skip(ftype)
-      end
-    else
-      iprot:skip(ftype)
-    end
-    iprot:readFieldEnd()
-  end
-  iprot:readStructEnd()
-end
-
-function putMultiple_result:write(oprot)
-  oprot:writeStructBegin('putMultiple_result')
-  if self.io ~= nil then
-    oprot:writeFieldBegin('io', TType.STRUCT, 1)
-    self.io:write(oprot)
-    oprot:writeFieldEnd()
-  end
-  oprot:writeFieldStop()
-  oprot:writeStructEnd()
-end
-
-deleteSingle_args = __TObject:new{
-  table,
-  deleteSingle
-}
-
-function deleteSingle_args:read(iprot)
-  iprot:readStructBegin()
-  while true do
-    local fname, ftype, fid = iprot:readFieldBegin()
-    if ftype == TType.STOP then
-      break
-    elseif fid == 1 then
-      if ftype == TType.STRING then
-        self.table = iprot:readString()
-      else
-        iprot:skip(ftype)
-      end
-    elseif fid == 2 then
-      if ftype == TType.STRUCT then
-        self.deleteSingle = TDelete:new{}
-        self.deleteSingle:read(iprot)
-      else
-        iprot:skip(ftype)
-      end
-    else
-      iprot:skip(ftype)
-    end
-    iprot:readFieldEnd()
-  end
-  iprot:readStructEnd()
-end
-
-function deleteSingle_args:write(oprot)
-  oprot:writeStructBegin('deleteSingle_args')
-  if self.table ~= nil then
-    oprot:writeFieldBegin('table', TType.STRING, 1)
-    oprot:writeString(self.table)
-    oprot:writeFieldEnd()
-  end
-  if self.deleteSingle ~= nil then
-    oprot:writeFieldBegin('deleteSingle', TType.STRUCT, 2)
-    self.deleteSingle:write(oprot)
-    oprot:writeFieldEnd()
-  end
-  oprot:writeFieldStop()
-  oprot:writeStructEnd()
-end
-
-deleteSingle_result = __TObject:new{
-  io
-}
-
-function deleteSingle_result:read(iprot)
-  iprot:readStructBegin()
-  while true do
-    local fname, ftype, fid = iprot:readFieldBegin()
-    if ftype == TType.STOP then
-      break
-    elseif fid == 1 then
-      if ftype == TType.STRUCT then
-        self.io = TIOError:new{}
-        self.io:read(iprot)
-      else
-        iprot:skip(ftype)
-      end
-    else
-      iprot:skip(ftype)
-    end
-    iprot:readFieldEnd()
-  end
-  iprot:readStructEnd()
-end
-
-function deleteSingle_result:write(oprot)
-  oprot:writeStructBegin('deleteSingle_result')
-  if self.io ~= nil then
-    oprot:writeFieldBegin('io', TType.STRUCT, 1)
-    self.io:write(oprot)
-    oprot:writeFieldEnd()
-  end
-  oprot:writeFieldStop()
-  oprot:writeStructEnd()
-end
-
-deleteMultiple_args = __TObject:new{
-  table,
-  deletes
-}
-
-function deleteMultiple_args:read(iprot)
-  iprot:readStructBegin()
-  while true do
-    local fname, ftype, fid = iprot:readFieldBegin()
-    if ftype == TType.STOP then
-      break
-    elseif fid == 1 then
-      if ftype == TType.STRING then
-        self.table = iprot:readString()
-      else
-        iprot:skip(ftype)
-      end
-    elseif fid == 2 then
-      if ftype == TType.LIST then
-        self.deletes = {}
-        local _etype123, _size120 = iprot:readListBegin()
-        for _i=1,_size120 do
-          local _elem124 = TDelete:new{}
-          _elem124:read(iprot)
-          table.insert(self.deletes, _elem124)
-        end
-        iprot:readListEnd()
-      else
-        iprot:skip(ftype)
-      end
-    else
-      iprot:skip(ftype)
-    end
-    iprot:readFieldEnd()
-  end
-  iprot:readStructEnd()
-end
-
-function deleteMultiple_args:write(oprot)
-  oprot:writeStructBegin('deleteMultiple_args')
-  if self.table ~= nil then
-    oprot:writeFieldBegin('table', TType.STRING, 1)
-    oprot:writeString(self.table)
-    oprot:writeFieldEnd()
-  end
-  if self.deletes ~= nil then
-    oprot:writeFieldBegin('deletes', TType.LIST, 2)
-    oprot:writeListBegin(TType.STRUCT, #self.deletes)
-    for _,iter125 in ipairs(self.deletes) do
-      iter125:write(oprot)
-    end
-    oprot:writeListEnd()
-    oprot:writeFieldEnd()
-  end
-  oprot:writeFieldStop()
-  oprot:writeStructEnd()
-end
-
-deleteMultiple_result = __TObject:new{
-  success,
-  io
-}
-
-function deleteMultiple_result:read(iprot)
-  iprot:readStructBegin()
-  while true do
-    local fname, ftype, fid = iprot:readFieldBegin()
-    if ftype == TType.STOP then
-      break
-    elseif fid == 0 then
-      if ftype == TType.LIST then
-        self.success = {}
-        local _etype129, _size126 = iprot:readListBegin()
-        for _i=1,_size126 do
-          local _elem130 = TDelete:new{}
-          _elem130:read(iprot)
-          table.insert(self.success, _elem130)
-        end
-        iprot:readListEnd()
-      else
-        iprot:skip(ftype)
-      end
-    elseif fid == 1 then
-      if ftype == TType.STRUCT then
-        self.io = TIOError:new{}
-        self.io:read(iprot)
-      else
-        iprot:skip(ftype)
-      end
-    else
-      iprot:skip(ftype)
-    end
-    iprot:readFieldEnd()
-  end
-  iprot:readStructEnd()
-end
-
-function deleteMultiple_result:write(oprot)
-  oprot:writeStructBegin('deleteMultiple_result')
-  if self.success ~= nil then
-    oprot:writeFieldBegin('success', TType.LIST, 0)
-    oprot:writeListBegin(TType.STRUCT, #self.success)
-    for _,iter131 in ipairs(self.success) do
-      iter131:write(oprot)
-    end
-    oprot:writeListEnd()
-    oprot:writeFieldEnd()
-  end
-  if self.io ~= nil then
-    oprot:writeFieldBegin('io', TType.STRUCT, 1)
-    self.io:write(oprot)
-    oprot:writeFieldEnd()
-  end
-  oprot:writeFieldStop()
-  oprot:writeStructEnd()
-end
-
-checkAndDelete_args = __TObject:new{
-  table,
-  row,
-  family,
-  qualifier,
-  value,
-  deleteSingle
-}
-
-function checkAndDelete_args:read(iprot)
-  iprot:readStructBegin()
-  while true do
-    local fname, ftype, fid = iprot:readFieldBegin()
-    if ftype == TType.STOP then
-      break
-    elseif fid == 1 then
-      if ftype == TType.STRING then
-        self.table = iprot:readString()
-      else
-        iprot:skip(ftype)
-      end
-    elseif fid == 2 then
-      if ftype == TType.STRING then
-        self.row = iprot:readString()
-      else
-        iprot:skip(ftype)
-      end
-    elseif fid == 3 then
-      if ftype == TType.STRING then
-        self.family = iprot:readString()
-      else
-        iprot:skip(ftype)
-      end
-    elseif fid == 4 then
-      if ftype == TType.STRING then
-        self.qualifier = iprot:readString()
-      else
-        iprot:skip(ftype)
-      end
-    elseif fid == 5 then
-      if ftype == TType.STRING then
-        self.value = iprot:readString()
-      else
-        iprot:skip(ftype)
-      end
-    elseif fid == 6 then
-      if ftype == TType.STRUCT then
-        self.deleteSingle = TDelete:new{}
-        self.deleteSingle:read(iprot)
-      else
-        iprot:skip(ftype)
-      end
-    else
-      iprot:skip(ftype)
-    end
-    iprot:readFieldEnd()
-  end
-  iprot:readStructEnd()
-end
-
-function checkAndDelete_args:write(oprot)
-  oprot:writeStructBegin('checkAndDelete_args')
-  if self.table ~= nil then
-    oprot:writeFieldBegin('table', TType.STRING, 1)
-    oprot:writeString(self.table)
-    oprot:writeFieldEnd()
-  end
-  if self.row ~= nil then
-    oprot:writeFieldBegin('row', TType.STRING, 2)
-    oprot:writeString(self.row)
-    oprot:writeFieldEnd()
-  end
-  if self.family ~= nil then
-    oprot:writeFieldBegin('family', TType.STRING, 3)
-    oprot:writeString(self.family)
-    oprot:writeFieldEnd()
-  end
-  if self.qualifier ~= nil then
-    oprot:writeFieldBegin('qualifier', TType.STRING, 4)
-    oprot:writeString(self.qualifier)
-    oprot:writeFieldEnd()
-  end
-  if self.value ~= nil then
-    oprot:writeFieldBegin('value', TType.STRING, 5)
-    oprot:writeString(self.value)
-    oprot:writeFieldEnd()
-  end
-  if self.deleteSingle ~= nil then
-    oprot:writeFieldBegin('deleteSingle', TType.STRUCT, 6)
-    self.deleteSingle:write(oprot)
-    oprot:writeFieldEnd()
-  end
-  oprot:writeFieldStop()
-  oprot:writeStructEnd()
-end
-
-checkAndDelete_result = __TObject:new{
-  success,
-  io
-}
-
-function checkAndDelete_result:read(iprot)
-  iprot:readStructBegin()
-  while true do
-    local fname, ftype, fid = iprot:readFieldBegin()
-    if ftype == TType.STOP then
-      break
-    elseif fid == 0 then
-      if ftype == TType.BOOL then
-        self.success = iprot:readBool()
-      else
-        iprot:skip(ftype)
-      end
-    elseif fid == 1 then
-      if ftype == TType.STRUCT then
-        self.io = TIOError:new{}
-        self.io:read(iprot)
-      else
-        iprot:skip(ftype)
-      end
-    else
-      iprot:skip(ftype)
-    end
-    iprot:readFieldEnd()
-  end
-  iprot:readStructEnd()
-end
-
-function checkAndDelete_result:write(oprot)
-  oprot:writeStructBegin('checkAndDelete_result')
-  if self.success ~= nil then
-    oprot:writeFieldBegin('success', TType.BOOL, 0)
-    oprot:writeBool(self.success)
-    oprot:writeFieldEnd()
-  end
-  if self.io ~= nil then
-    oprot:writeFieldBegin('io', TType.STRUCT, 1)
-    self.io:write(oprot)
-    oprot:writeFieldEnd()
-  end
-  oprot:writeFieldStop()
-  oprot:writeStructEnd()
-end
-
-increment_args = __TObject:new{
-  table,
-  increment
-}
-
-function increment_args:read(iprot)
-  iprot:readStructBegin()
-  while true do
-    local fname, ftype, fid = iprot:readFieldBegin()
-    if ftype == TType.STOP then
-      break
-    elseif fid == 1 then
-      if ftype == TType.STRING then
-        self.table = iprot:readString()
-      else
-        iprot:skip(ftype)
-      end
-    elseif fid == 2 then
-      if ftype == TType.STRUCT then
-        self.increment = TIncrement:new{}
-        self.increment:read(iprot)
-      else
-        iprot:skip(ftype)
-      end
-    else
-      iprot:skip(ftype)
-    end
-    iprot:readFieldEnd()
-  end
-  iprot:readStructEnd()
-end
-
-function increment_args:write(oprot)
-  oprot:writeStructBegin('increment_args')
-  if self.table ~= nil then
-    oprot:writeFieldBegin('table', TType.STRING, 1)
-    oprot:writeString(self.table)
-    oprot:writeFieldEnd()
-  end
-  if self.increment ~= nil then
-    oprot:writeFieldBegin('increment', TType.STRUCT, 2)
-    self.increment:write(oprot)
-    oprot:writeFieldEnd()
-  end
-  oprot:writeFieldStop()
-  oprot:writeStructEnd()
-end
-
-increment_result = __TObject:new{
-  success,
-  io
-}
-
-function increment_result:read(iprot)
-  iprot:readStructBegin()
-  while true do
-    local fname, ftype, fid = iprot:readFieldBegin()
-    if ftype == TType.STOP then
-      break
-    elseif fid == 0 then
-      if ftype == TType.STRUCT then
-        self.success = TResult:new{}
-        self.success:read(iprot)
-      else
-        iprot:skip(ftype)
-      end
-    elseif fid == 1 then
-      if ftype == TType.STRUCT then
-        self.io = TIOError:new{}
-        self.io:read(iprot)
-      else
-        iprot:skip(ftype)
-      end
-    else
-      iprot:skip(ftype)
-    end
-    iprot:readFieldEnd()
-  end
-  iprot:readStructEnd()
-end
-
-function increment_result:write(oprot)
-  oprot:writeStructBegin('increment_result')
-  if self.success ~= nil then
-    oprot:writeFieldBegin('success', TType.STRUCT, 0)
-    self.success:write(oprot)
-    oprot:writeFieldEnd()
-  end
-  if self.io ~= nil then
-    oprot:writeFieldBegin('io', TType.STRUCT, 1)
-    self.io:write(oprot)
-    oprot:writeFieldEnd()
-  end
-  oprot:writeFieldStop()
-  oprot:writeStructEnd()
-end
-
-append_args = __TObject:new{
-  table,
-  append
-}
-
-function append_args:read(iprot)
-  iprot:readStructBegin()
-  while true do
-    local fname, ftype, fid = iprot:readFieldBegin()
-    if ftype == TType.STOP then
-      break
-    elseif fid == 1 then
-      if ftype == TType.STRING then
-        self.table = iprot:readString()
-      else
-        iprot:skip(ftype)
-      end
-    elseif fid == 2 then
-      if ftype == TType.STRUCT then
-        self.append = TAppend:new{}
-        self.append:read(iprot)
-      else
-        iprot:skip(ftype)
-      end
-    else
-      iprot:skip(ftype)
-    end
-    iprot:readFieldEnd()
-  end
-  iprot:readStructEnd()
-end
-
-function append_args:write(oprot)
-  oprot:writeStructBegin('append_args')
-  if self.table ~= nil then
-    oprot:writeFieldBegin('table', TType.STRING, 1)
-    oprot:writeString(self.table)
-    oprot:writeFieldEnd()
-  end
-  if self.append ~= nil then
-    oprot:writeFieldBegin('append', TType.STRUCT, 2)
-    self.append:write(oprot)
-    oprot:writeFieldEnd()
-  end
-  oprot:writeFieldStop()
-  oprot:writeStructEnd()
-end
-
-append_result = __TObject:new{
-  success,
-  io
-}
-
-function append_result:read(iprot)
-  iprot:readStructBegin()
-  while true do
-    local fname, ftype, fid = iprot:readFieldBegin()
-    if ftype == TType.STOP then
-      break
-    elseif fid == 0 then
-      if ftype == TType.STRUCT then
-        self.success = TResult:new{}
-        self.success:read(iprot)
-      else
-        iprot:skip(ftype)
-      end
-    elseif fid == 1 then
-      if ftype == TType.STRUCT then
-        self.io = TIOError:new{}
-        self.io:read(iprot)
-      else
-        iprot:skip(ftype)
-      end
-    else
-      iprot:skip(ftype)
-    end
-    iprot:readFieldEnd()
-  end
-  iprot:readStructEnd()
-end
-
-function append_result:write(oprot)
-  oprot:writeStructBegin('append_result')
-  if self.success ~= nil then
-    oprot:writeFieldBegin('success', TType.STRUCT, 0)
-    self.success:write(oprot)
-    oprot:writeFieldEnd()
-  end
-  if self.io ~= nil then
-    oprot:writeFieldBegin('io', TType.STRUCT, 1)
-    self.io:write(oprot)
-    oprot:writeFieldEnd()
-  end
-  oprot:writeFieldStop()
-  oprot:writeStructEnd()
-end
-
-openScanner_args = __TObject:new{
-  table,
-  scan
-}
-
-function openScanner_args:read(iprot)
-  iprot:readStructBegin()
-  while true do
-    local fname, ftype, fid = iprot:readFieldBegin()
-    if ftype == TType.STOP then
-      break
-    elseif fid == 1 then
-      if ftype == TType.STRING then
-        self.table = iprot:readString()
-      else
-        iprot:skip(ftype)
-      end
-    elseif fid == 2 then
-      if ftype == TType.STRUCT then
-        self.scan = TScan:new{}
-        self.scan:read(iprot)
-      else
-        iprot:skip(ftype)
-      end
-    else
-      iprot:skip(ftype)
-    end
-    iprot:readFieldEnd()
-  end
-  iprot:readStructEnd()
-end
-
-function openScanner_args:write(oprot)
-  oprot:writeStructBegin('openScanner_args')
-  if self.table ~= nil then
-    oprot:writeFieldBegin('table', TType.STRING, 1)
-    oprot:writeString(self.table)
-    oprot:writeFieldEnd()
-  end
-  if self.scan ~= nil then
-    oprot:writeFieldBegin('scan', TType.STRUCT, 2)
-    self.scan:write(oprot)
-    oprot:writeFieldEnd()
-  end
-  oprot:writeFieldStop()
-  oprot:writeStructEnd()
-end
-
-openScanner_result = __TObject:new{
-  success,
-  io
-}
-
-function openScanner_result:read(iprot)
-  iprot:readStructBegin()
-  while true do
-    local fname, ftype, fid = iprot:readFieldBegin()
-    if ftype == TType.STOP then
-      break
-    elseif fid == 0 then
-      if ftype == TType.I32 then
-        self.success = iprot:readI32()
-      else
-        iprot:skip(ftype)
-      end
-    elseif fid == 1 then
-      if ftype == TType.STRUCT then
-        self.io = TIOError:new{}
-        self.io:read(iprot)
-      else
-        iprot:skip(ftype)
-      end
-    else
-      iprot:skip(ftype)
-    end
-    iprot:readFieldEnd()
-  end
-  iprot:readStructEnd()
-end
-
-function openScanner_result:write(oprot)
-  oprot:writeStructBegin('openScanner_result')
-  if self.success ~= nil then
-    oprot:writeFieldBegin('success', TType.I32, 0)
-    oprot:writeI32(self.success)
-    oprot:writeFieldEnd()
-  end
-  if self.io ~= nil then
-    oprot:writeFieldBegin('io', TType.STRUCT, 1)
-    self.io:write(oprot)
-    oprot:writeFieldEnd()
-  end
-  oprot:writeFieldStop()
-  oprot:writeStructEnd()
-end
-
-getScannerRows_args = __TObject:new{
-  scannerId,
-  numRows
-}
-
-function getScannerRows_args:read(iprot)
-  iprot:readStructBegin()
-  while true do
-    local fname, ftype, fid = iprot:readFieldBegin()
-    if ftype == TType.STOP then
-      break
-    elseif fid == 1 then
-      if ftype == TType.I32 then
-        self.scannerId = iprot:readI32()
-      else
-        iprot:skip(ftype)
-      end
-    elseif fid == 2 then
-      if ftype == TType.I32 then
-        self.numRows = iprot:readI32()
-      else
-        iprot:skip(ftype)
-      end
-    else
-      iprot:skip(ftype)
-    end
-    iprot:readFieldEnd()
-  end
-  iprot:readStructEnd()
-end
-
-function getScannerRows_args:write(oprot)
-  oprot:writeStructBegin('getScannerRows_args')
-  if self.scannerId ~= nil then
-    oprot:writeFieldBegin('scannerId', TType.I32, 1)
-    oprot:writeI32(self.scannerId)
-    oprot:writeFieldEnd()
-  end
-  if self.numRows ~= nil then
-    oprot:writeFieldBegin('numRows', TType.I32, 2)
-    oprot:writeI32(self.numRows)
-    oprot:writeFieldEnd()
-  end
-  oprot:writeFieldStop()
-  oprot:writeStructEnd()
-end
-
-getScannerRows_result = __TObject:new{
-  success,
-  io,
-  ia
-}
-
-function getScannerRows_result:read(iprot)
-  iprot:readStructBegin()
-  while true do
-    local fname, ftype, fid = iprot:readFieldBegin()
-    if ftype == TType.STOP then
-      break
-    elseif fid == 0 then
-      if ftype == TType.LIST then
-        self.success = {}
-        local _etype135, _size132 = iprot:readListBegin()
-        for _i=1,_size132 do
-          local _elem136 = TResult:new{}
-          _elem136:read(iprot)
-          table.insert(self.success, _elem136)
-        end
-        iprot:readListEnd()
-      else
-        iprot:skip(ftype)
-      end
-    elseif fid == 1 then
-      if ftype == TType.STRUCT then
-        self.io = TIOError:new{}
-        self.io:read(iprot)
-      else
-        iprot:skip(ftype)
-      end
-    elseif fid == 2 then
-      if ftype == TType.STRUCT then
-        self.ia = TIllegalArgument:new{}
-        self.ia:read(iprot)
-      else
-        iprot:skip(ftype)
-      end
-    else
-      iprot:skip(ftype)
-    end
-    iprot:readFieldEnd()
-  end
-  iprot:readStructEnd()
-end
-
-function getScannerRows_result:write(oprot)
-  oprot:writeStructBegin('getScannerRows_result')
-  if self.success ~= nil then
-    oprot:writeFieldBegin('success', TType.LIST, 0)
-    oprot:writeListBegin(TType.STRUCT, #self.success)
-    for _,iter137 in ipairs(self.success) do
-      iter137:write(oprot)
-    end
-    oprot:writeListEnd()
-    oprot:writeFieldEnd()
-  end
-  if self.io ~= nil then
-    oprot:writeFieldBegin('io', TType.STRUCT, 1)
-    self.io:write(oprot)
-    oprot:writeFieldEnd()
-  end
-  if self.ia ~= nil then
-    oprot:writeFieldBegin('ia', TType.STRUCT, 2)
-    self.ia:write(oprot)
-    oprot:writeFieldEnd()
-  end
-  oprot:writeFieldStop()
-  oprot:writeStructEnd()
-end
-
-closeScanner_args = __TObject:new{
-  scannerId
-}
-
-function closeScanner_args:read(iprot)
-  iprot:readStructBegin()
-  while true do
-    local fname, ftype, fid = iprot:readFieldBegin()
-    if ftype == TType.STOP then
-      break
-    elseif fid == 1 then
-      if ftype == TType.I32 then
-        self.scannerId = iprot:readI32()
-      else
-        iprot:skip(ftype)
-      end
-    else
-      iprot:skip(ftype)
-    end
-    iprot:readFieldEnd()
-  end
-  iprot:readStructEnd()
-end
-
-function closeScanner_args:write(oprot)
-  oprot:writeStructBegin('closeScanner_args')
-  if self.scannerId ~= nil then
-    oprot:writeFieldBegin('scannerId', TType.I32, 1)
-    oprot:writeI32(self.scannerId)
-    oprot:writeFieldEnd()
-  end
-  oprot:writeFieldStop()
-  oprot:writeStructEnd()
-end
-
-closeScanner_result = __TObject:new{
-  io,
-  ia
-}
-
-function closeScanner_result:read(iprot)
-  iprot:readStructBegin()
-  while true do
-    local fname, ftype, fid = iprot:readFieldBegin()
-    if ftype == TType.STOP then
-      break
-    elseif fid == 1 then
-      if ftype == TType.STRUCT then
-        self.io = TIOError:new{}
-        self.io:read(iprot)
-      else
-        iprot:skip(ftype)
-      end
-    elseif fid == 2 then
-      if ftype == TType.STRUCT then
-        self.ia = TIllegalArgument:new{}
-        self.ia:read(iprot)
-      else
-        iprot:skip(ftype)
-      end
-    else
-      iprot:skip(ftype)
-    end
-    iprot:readFieldEnd()
-  end
-  iprot:readStructEnd()
-end
-
-function closeScanner_result:write(oprot)
-  oprot:writeStructBegin('closeScanner_result')
-  if self.io ~= nil then
-    oprot:writeFieldBegin('io', TType.STRUCT, 1)
-    self.io:write(oprot)
-    oprot:writeFieldEnd()
-  end
-  if self.ia ~= nil then
-    oprot:writeFieldBegin('ia', TType.STRUCT, 2)
-    self.ia:write(oprot)
-    oprot:writeFieldEnd()
-  end
-  oprot:writeFieldStop()
-  oprot:writeStructEnd()
-end
-
-mutateRow_args = __TObject:new{
-  table,
-  rowMutations
-}
-
-function mutateRow_args:read(iprot)
-  iprot:readStructBegin()
-  while true do
-    local fname, ftype, fid = iprot:readFieldBegin()
-    if ftype == TType.STOP then
-      break
-    elseif fid == 1 then
-      if ftype == TType.STRING then
-        self.table = iprot:readString()
-      else
-        iprot:skip(ftype)
-      end
-    elseif fid == 2 then
-      if ftype == TType.STRUCT then
-        self.rowMutations = TRowMutations:new{}
-        self.rowMutations:read(iprot)
-      else
-        iprot:skip(ftype)
-      end
-    else
-      iprot:skip(ftype)
-    end
-    iprot:readFieldEnd()
-  end
-  iprot:readStructEnd()
-end
-
-function mutateRow_args:write(oprot)
-  oprot:writeStructBegin('mutateRow_args')
-  if self.table ~= nil then
-    oprot:writeFieldBegin('table', TType.STRING, 1)
-    oprot:writeString(self.table)
-    oprot:writeFieldEnd()
-  end
-  if self.rowMutations ~= nil then
-    oprot:writeFieldBegin('rowMutations', TType.STRUCT, 2)
-    self.rowMutations:write(oprot)
-    oprot:writeFieldEnd()
-  end
-  oprot:writeFieldStop()
-  oprot:writeStructEnd()
-end
-
-mutateRow_result = __TObject:new{
-  io
-}
-
-function mutateRow_result:read(iprot)
-  iprot:readStructBegin()
-  while true do
-    local fname, ftype, fid = iprot:readFieldBegin()
-    if ftype == TType.STOP then
-      break
-    elseif fid == 1 then
-      if ftype == TType.STRUCT then
-        self.io = TIOError:new{}
-        self.io:read(iprot)
-      else
-        iprot:skip(ftype)
-      end
-    else
-      iprot:skip(ftype)
-    end
-    iprot:readFieldEnd()
-  end
-  iprot:readStructEnd()
-end
-
-function mutateRow_result:write(oprot)
-  oprot:writeStructBegin('mutateRow_result')
-  if self.io ~= nil then
-    oprot:writeFieldBegin('io', TType.STRUCT, 1)
-    self.io:write(oprot)
-    oprot:writeFieldEnd()
-  end
-  oprot:writeFieldStop()
-  oprot:writeStructEnd()
-end
-
-getScannerResults_args = __TObject:new{
-  table,
-  scan,
-  numRows
-}
-
-function getScannerResults_args:read(iprot)
-  iprot:readStructBegin()
-  while true do
-    local fname, ftype, fid = iprot:readFieldBegin()
-    if ftype == TType.STOP then
-      break
-    elseif fid == 1 then
-      if ftype == TType.STRING then
-        self.table = iprot:readString()
-      else
-        iprot:skip(ftype)
-      end
-    elseif fid == 2 then
-      if ftype == TType.STRUCT then
-        self.scan = TScan:new{}
-        self.scan:read(iprot)
-      else
-        iprot:skip(ftype)
-      end
-    elseif fid == 3 then
-      if ftype == TType.I32 then
-        self.numRows = iprot:readI32()
-      else
-        iprot:skip(ftype)
-      end
-    else
-      iprot:skip(ftype)
-    end
-    iprot:readFieldEnd()
-  end
-  iprot:readStructEnd()
-end
-
-function getScannerResults_args:write(oprot)
-  oprot:writeStructBegin('getScannerResults_args')
-  if self.table ~= nil then
-    oprot:writeFieldBegin('table', TType.STRING, 1)
-    oprot:writeString(self.table)
-    oprot:writeFieldEnd()
-  end
-  if self.scan ~= nil then
-    oprot:writeFieldBegin('scan', TType.STRUCT, 2)
-    self.scan:write(oprot)
-    oprot:writeFieldEnd()
-  end
-  if self.numRows ~= nil then
-    oprot:writeFieldBegin('numRows', TType.I32, 3)
-    oprot:writeI32(self.numRows)
-    oprot:writeFieldEnd()
-  end
-  oprot:writeFieldStop()
-  oprot:writeStructEnd()
-end
-
-getScannerResults_result = __TObject:new{
-  success,
-  io
-}
-
-function getScannerResults_result:read(iprot)
-  iprot:readStructBegin()
-  while true do
-    local fname, ftype, fid = iprot:readFieldBegin()
-    if ftype == TType.STOP then
-      break
-    elseif fid == 0 then
-      if ftype == TType.LIST then
-        self.success = {}
-        local _etype141, _size138 = iprot:readListBegin()
-        for _i=1,_size138 do
-          local _elem142 = TResult:new{}
-          _elem142:read(iprot)
-          table.insert(self.success, _elem142)
-        end
-        iprot:readListEnd()
-      else
-        iprot:skip(ftype)
-      end
-    elseif fid == 1 then
-      if ftype == TType.STRUCT then
-        self.io = TIOError:new{}
-        self.io:read(iprot)
-      else
-        iprot:skip(ftype)
-      end
-    else
-      iprot:skip(ftype)
-    end
-    iprot:readFieldEnd()
-  end
-  iprot:readStructEnd()
-end
-
-function getScannerResults_result:write(oprot)
-  oprot:writeStructBegin('getScannerResults_result')
-  if self.success ~= nil then
-    oprot:writeFieldBegin('success', TType.LIST, 0)
-    oprot:writeListBegin(TType.STRUCT, #self.success)
-    for _,iter143 in ipairs(self.success) do
-      iter143:write(oprot)
-    end
-    oprot:writeListEnd()
-    oprot:writeFieldEnd()
-  end
-  if self.io ~= nil then
-    oprot:writeFieldBegin('io', TType.STRUCT, 1)
-    self.io:write(oprot)
-    oprot:writeFieldEnd()
-  end
-  oprot:writeFieldStop()
-  oprot:writeStructEnd()
-end
+return _M
