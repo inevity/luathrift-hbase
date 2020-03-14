@@ -1,4 +1,5 @@
 # Configure command
+```
 ./configure --prefix=/usr/local/thrift10lua51 --without-qt4 --without-qt5
 --without-dart --without-haxe --without-c_glib --without-csharp --without-erlang
 --without-nodejs --without-python --without-perl --without-php
@@ -8,3 +9,4 @@ LUA=/usr/local/openresty/luajit/bin/luajit
 LUA_INCLUDE=-I/usr/local/openresty/luajit/include/luajit-2.1
 LUA_LIB=-lluajit-5.1
 thrift --gen lua /root/hbase/hbase-thrift/src/main/resources/org/apache/hadoop/hbase/thrift2/hbase.thrift
+```
