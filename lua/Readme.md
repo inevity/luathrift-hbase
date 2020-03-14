@@ -1,4 +1,4 @@
-# configure command
+# Configure command
 ./configure --prefix=/usr/local/thrift10lua51 --without-qt4 --without-qt5
 --without-dart --without-haxe --without-c_glib --without-csharp --without-erlang
 --without-nodejs --without-python --without-perl --without-php
